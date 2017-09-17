@@ -1,0 +1,22 @@
+﻿  Steering.cpp
+  SpriteManager.cpp
+  Sprite.cpp
+  PlayerMoveToMessage.cpp
+  main.cpp
+  KinematicWanderSteering.cpp
+  KinematicUnit.cpp
+  KinematicSeekSteering.cpp
+  KinematicArriveSteering.cpp
+  Kinematic.cpp
+  GraphicsSystem.cpp
+  GraphicsBufferManager.cpp
+  GraphicsBuffer.cpp
+  GameMessageManager.cpp
+  GameMessage.cpp
+  Game.cpp
+  DynamicSeekSteering.cpp
+  DynamicArriveSteering.cpp
+  Generating Code...
+DynamicArriveSteering.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  water.vcxproj -> C:\Users\froznsun\Desktop\Repositories\AI\My Repo\steering\Debug\steering.exe
+  water.vcxproj -> C:\Users\froznsun\Desktop\Repositories\AI\My Repo\steering\Debug\steering.pdb (Full PDB)
