@@ -27,6 +27,4 @@ private:
 	int mKeyCode;
 
 	void process();
-	void addUnitByType(UnitType _type);
-	void deleteRandomUnit();
 };

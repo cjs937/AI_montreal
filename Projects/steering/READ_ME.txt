@@ -1,7 +1,6 @@
 Github link: https://github.com/cjs937/AI_montreal/tree/master/steering
 
-In order to compile the project DeanLib needs to be in the folder outside of this one, as well as a directory
-containing the allegro5 folder. After that everything should compile fine.
+In order to compile the project DeanLib and the directory containing the allegro5 folder need to be in the directory above of this one. After that everything should work fine.
 
 Inputs:
 A - Adds dynamic arrive entity that moves towards the player
