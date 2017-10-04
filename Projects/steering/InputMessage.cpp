@@ -10,15 +10,15 @@
 
 void InputMessage::process()
 {
+	GameMessage* newMessage = NULL;
+
 	switch (mKeyCode)
 	{
 	case ALLEGRO_KEY_A:
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			GameMessage* newMessage = new AddUnitMessage(SEEKER);
-
-			gpGame->getMessageManager()->addMessage(newMessage, 0);
+			newMessage = new AddUnitMessage(SEEKER);
 		}
 		break;
 	}
@@ -26,9 +26,7 @@ void InputMessage::process()
 	{	
 		if(mInputType == KEY_DOWN)
 		{
-			GameMessage* newMessage = new AddUnitMessage(ARRIVER);
-
-			gpGame->getMessageManager()->addMessage(newMessage, 0);
+			newMessage = new AddUnitMessage(ARRIVER);
 		}
 		break;
 	}
@@ -36,9 +34,15 @@ void InputMessage::process()
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			GameMessage* newMessage = new RemoveRandUnitMessage();
-
-			gpGame->getMessageManager()->addMessage(newMessage, 0);
+			newMessage = new RemoveRandUnitMessage();
+		}
+		break;
+	}
+	case ALLEGRO_KEY_G:
+	{
+		if (mInputType == KEY_DOWN)
+		{
+			newMessage = new AddUnitMessage(WANDERER);
 		}
 		break;
 	}
@@ -46,22 +50,21 @@ void InputMessage::process()
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			GameMessage* newMessage = new PlayerMoveToMessage(gpGame->getInputSystem()->getMousePosition());
-
-			gpGame->getMessageManager()->addMessage(newMessage, 0);
+			newMessage = new PlayerMoveToMessage(gpGame->getInputSystem()->getMousePosition());
 		}
 
 		break;
 	}
 	case ALLEGRO_KEY_ESCAPE:
 	{
-		GameMessage* newMessage = new QuitGameMessage();
-
-		gpGame->getMessageManager()->addMessage(newMessage, 0);
+		newMessage = new QuitGameMessage();
 
 		break;
 	}
 	default:
 		break;
 	}
+
+	if(newMessage != NULL)
+		gpGame->getMessageManager()->addMessage(newMessage, 0);
 };

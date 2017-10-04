@@ -18,4 +18,6 @@ void AddUnitMessage::process()
 		newUnit->dynamicSeek(gpGame->getPlayerUnit());
 	else if (mUnitType == ARRIVER)
 		newUnit->dynamicArrive(gpGame->getPlayerUnit());
+	else if (mUnitType == WANDERER)
+		newUnit->wander();
 }

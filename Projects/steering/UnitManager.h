@@ -12,8 +12,15 @@ enum UnitType
 	PLAYER,
 	ARRIVER,
 	SEEKER,
+	WANDERER,
 
 	NUM_TYPES
+};
+
+enum Components
+{
+	WANDER_AND_SEEK,
+	WANDER_AND_FLEE
 };
 
 class UnitManager : public Trackable
