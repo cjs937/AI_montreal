@@ -73,6 +73,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit)
 	newRelativePos.normalize();
 
 	_unit->getSteering()->setLinear(newRelativePos * _unit->getMaxAcceleration());
+	_unit->getSteering()->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _unit->getSteering()->getLinear()));
 
 	return _unit->getSteering();
 }

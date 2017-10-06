@@ -3,6 +3,9 @@
 #include "GraphicsBufferManager.h"
 #include "SpriteManager.h"
 #include "GraphicsBuffer.h"
+#include "Component.h"
+#include "WanderAndFleeComponent.h"
+#include "WanderAndSeekComponent.h"
 
 typedef std::pair <UnitType, std::map<int, KinematicUnit*>*> mapListPair;
 typedef std::pair <int, KinematicUnit*> mapPair;
@@ -10,7 +13,8 @@ typedef std::pair <int, KinematicUnit*> mapPair;
 UnitManager::UnitManager()
 {
 	mPlayerIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp");
-	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp");
+	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("ninjastar.bmp");
+	//mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp"); //in case you don't want us to use custom sprites
 
 	GraphicsBuffer* pPlayerBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mPlayerIconBufferID);
 	Sprite* pArrowSprite = NULL;
@@ -242,4 +246,31 @@ void UnitManager::removeRandomUnit()
 	{	
 		gpGame->quit();
 	}
+}
+
+Component* UnitManager::addComponent(ComponentType _type, KinematicUnit* _unit)
+{
+	Component* newComponent = NULL;
+
+	switch (_type)
+	{
+	case WANDER_AND_FLEE:
+	{
+		newComponent = new WanderAndFleeComponent(_unit, 300.0f);
+
+		_unit->addComponent(newComponent);
+		break;
+	}
+	case WANDER_AND_SEEK:
+	{
+		newComponent = new WanderAndSeekComponent(_unit, 300.0f);
+
+		_unit->addComponent(newComponent);
+		break;
+	}
+	default:
+		break;
+	}
+
+	return newComponent;
 }

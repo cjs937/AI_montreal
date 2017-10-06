@@ -22,6 +22,7 @@
 #include "PlayerMoveToMessage.h"
 #include "InputSystem.h"
 #include "UnitManager.h"
+#include "UiManager.h"
 
 Game* gpGame = NULL;
 
@@ -132,7 +133,7 @@ bool Game::init()
 	mpInputSystem = new InputSystem();
 	mpUnitManager = new UnitManager();
 	mpMessageManager = new GameMessageManager();
-
+	mpUIManager = new UIManager();
 	//load buffers
 	mBackgroundBufferID = mpGraphicsBufferManager->loadBuffer("wallpaper.bmp");
 
@@ -178,6 +179,9 @@ void Game::cleanup()
 	delete mpInputSystem;
 	mpInputSystem = NULL;
 
+	delete mpUIManager;
+	mpUIManager = NULL;
+
 	al_destroy_sample(mpSample);
 	mpSample = NULL;
 
@@ -201,13 +205,16 @@ void Game::processLoop()
 {
 	//update units
 	mpUnitManager->update( LOOP_TARGET_TIME/1000.0f );
-	
+
 	//draw background
 	Sprite* pBackgroundSprite = mpSpriteManager->getSprite( BACKGROUND_SPRITE_ID );
 	pBackgroundSprite->draw( *(mpGraphicsSystem->getBackBuffer()), 0, 0 );
 
 	//draw units
 	mpUnitManager->draw( GRAPHICS_SYSTEM->getBackBuffer() );
+
+	//update UI;
+	mpUIManager->update(LOOP_TARGET_TIME / 1000.0f);
 
 	mpMessageManager->processMessagesForThisframe();
 

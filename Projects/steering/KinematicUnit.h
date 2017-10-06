@@ -2,7 +2,7 @@
 
 #include "Kinematic.h"
 #include "Steering.h"
-
+#include <vector>
 /*KinematicUnit - a unit that is derived from the Kinematic class.  Adds behaviors and max speeds and a current Steering.
 
 Dean Lawson
@@ -13,6 +13,7 @@ Champlain College
 //forward declarations
 class Sprite;
 class GraphicsBuffer;
+class Component;
 
 extern Steering gNullSteering;//global object - can point to it for a "NULL" Steering
 
@@ -35,6 +36,7 @@ public:
 	void setVelocity( const Vector2D& velocity ){ mVelocity = velocity; };
 	int getID() { return mUnitID; };
 	Steering* getSteering() { return mpCurrentSteering; };
+	void addComponent(Component* _newComponent);
 	virtual void setNewOrientation();//face the direction you are moving
 
 	//draw yourself to the indicated buffer
@@ -51,6 +53,7 @@ public:
 	void dynamicArrive( KinematicUnit* pTarget );
 
 private:
+	std::vector<Component*> mComponents;
 	Sprite* mpSprite;
 	Steering* mpCurrentSteering;
 	Vector2D mTarget;//used only for Kinematic seek and arrive

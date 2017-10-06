@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "GameMessageManager.h"
 #include "InputMessage.h"
+#include "UiManager.h"
 
 InputSystem::InputSystem()
 {
@@ -85,7 +86,7 @@ void InputSystem::update()
 	mousePos << mouseState.x << ":" << mouseState.y;
 
 	//write text at mouse position
-	al_draw_text(gpGame->getFont(), al_map_rgb(255, 255, 255), mouseState.x, mouseState.y, ALLEGRO_ALIGN_CENTRE, mousePos.str().c_str());
+	al_draw_text(gpGame->getUIManager()->getDefaultFont(), al_map_rgb(255, 255, 255), mouseState.x, mouseState.y, ALLEGRO_ALIGN_CENTRE, mousePos.str().c_str());
 }
 
 Vector2D InputSystem::getMousePosition()

@@ -7,14 +7,10 @@ class Component : public Trackable
 {
 public:
 
-	KinematicUnit* mCurrentUnit;
+	KinematicUnit* mpCurrentUnit;
 
-	Component(KinematicUnit* _unit) :mCurrentUnit(_unit) {};
-	
+	Component(KinematicUnit* _unit) :mpCurrentUnit(_unit) {};
+	~Component(){};
+
 	virtual void update(float _dt) = 0;
-
-private:
-
-	~Component() 
-	{ };
 };

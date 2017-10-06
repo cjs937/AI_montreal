@@ -13,13 +13,34 @@ UIManager::UIManager()
 		return;
 	}
 
+	mpDefaultFont = al_load_ttf_font("cour.ttf", 20, 0);
+
 	mAvailalbeIDs.push(0);
 
-	addObject(TEXT, Vector2D(0, 0), ALLEGRO_ALIGN_LEFT);
+	int textID = addObject(TEXT, Vector2D(0, 0), ALLEGRO_ALIGN_LEFT)->getID();
+
+	static_cast<UIText*>(mUIOBjects[textID])->displayText("test");
 }
 
 UIManager::~UIManager()
-{}
+{
+	for (std::map<int, UIObject*>::iterator uiObject = mUIOBjects.begin(); uiObject != mUIOBjects.end(); ++uiObject)
+	{
+		//not deleting the object for some reason, leading to memory leaks
+		delete mUIOBjects[uiObject->first];
+
+		mUIOBjects[uiObject->first] = NULL;
+	}
+
+	mUIOBjects.clear();
+
+	if (mpDefaultFont != NULL)
+	{
+		al_destroy_font( mpDefaultFont );
+
+		mpDefaultFont = NULL;
+	}
+}
 
 void UIManager::update(float _dt)
 {
@@ -44,7 +65,7 @@ UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentF
 	{
 		case TEXT:
 		{
-			newObj = new UIText(newID, _position, al_load_ttf_font("cour.ttf", 20, 0), new Color(BLACK), static_cast<int>(ALLEGRO_ALIGN_LEFT));
+			newObj = new UIText(newID, _position, mpDefaultFont, new Color(WHITE), static_cast<int>(ALLEGRO_ALIGN_LEFT));
 			break;
 		}
 		default:

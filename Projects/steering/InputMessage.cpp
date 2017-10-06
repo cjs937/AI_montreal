@@ -11,6 +11,7 @@
 void InputMessage::process()
 {
 	GameMessage* newMessage = NULL;
+	Vector2D playerPosition = gpGame->getPlayerUnit()->getPosition();
 
 	switch (mKeyCode)
 	{
@@ -18,7 +19,7 @@ void InputMessage::process()
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			newMessage = new AddUnitMessage(SEEKER);
+			newMessage = new AddUnitMessage(SEEKER, Vector2D(playerPosition.getX() + 200,0));
 		}
 		break;
 	}
@@ -26,7 +27,8 @@ void InputMessage::process()
 	{	
 		if(mInputType == KEY_DOWN)
 		{
-			newMessage = new AddUnitMessage(ARRIVER);
+			//newMessage = new AddUnitMessage(ARRIVER);
+			newMessage = new AddUnitMessage(WANDER_SEEK, Vector2D(playerPosition.getX() + 200, 0));
 		}
 		break;
 	}
@@ -38,11 +40,19 @@ void InputMessage::process()
 		}
 		break;
 	}
+	case ALLEGRO_KEY_F:
+	{
+		if (mInputType == KEY_DOWN)
+		{
+			newMessage = new AddUnitMessage(WANDER_FLEE, Vector2D(playerPosition.getX() + 100, 0));
+		}
+		break;	
+	}
 	case ALLEGRO_KEY_G:
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			newMessage = new AddUnitMessage(WANDERER);
+			newMessage = new AddUnitMessage(WANDERER, Vector2D(playerPosition.getX() + 200, 0));
 		}
 		break;
 	}

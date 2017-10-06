@@ -7,6 +7,8 @@ Color::Color(DefaultColor _color)
 	case BLACK:
 		color = al_map_rgba(0, 0, 0, 0);
 		break;
+	case WHITE:
+		color = al_map_rgba(255, 255, 255, 0);
 	default:
 		color = color = al_map_rgba(0, 0, 0, 0);
 	}

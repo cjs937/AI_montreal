@@ -5,7 +5,7 @@ class KinematicUnit;
 class Steering;
 class Vector2D;
 
-const float UNIT_COLLISION_RADIUS = 0.30f;
+const float UNIT_COLLISION_RADIUS = 400.0f;
 
 class CollisionSystem : public Trackable
 {

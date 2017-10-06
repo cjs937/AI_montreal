@@ -17,6 +17,7 @@ class GameMessageManager;
 class Timer;
 class InputSystem;
 class UnitManager;
+class UIManager;
 
 const IDType BACKGROUND_SPRITE_ID = 0;
 const IDType PLAYER_ICON_SPRITE_ID = 1;
@@ -45,6 +46,7 @@ public:
 	inline InputSystem* getInputSystem() const { return mpInputSystem; };
 	inline UnitManager* getUnitManager() const { return mpUnitManager; };
 	inline Timer* getMasterTimer() const { return mpMasterTimer; };
+	inline UIManager* getUIManager() const { return mpUIManager; };
 	inline double getCurrentTime() const { return mpMasterTimer->getElapsedTime(); };
 	inline void quit() { mShouldExit = true; };
 	KinematicUnit* const getPlayerUnit();//player unit id should always be 0
@@ -56,6 +58,7 @@ private:
 	GameMessageManager* mpMessageManager;
 	UnitManager* mpUnitManager;
 	InputSystem* mpInputSystem;
+	UIManager* mpUIManager;
 	Timer* mpLoopTimer;
 	Timer* mpMasterTimer;
 	bool mShouldExit;

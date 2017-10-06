@@ -10,6 +10,7 @@
 #include "DynamicSeekSteering.h"
 #include "DynamicArriveSteering.h"
 #include "CollisionSystem.h"
+#include "Component.h"
 
 using namespace std;
 
@@ -27,6 +28,13 @@ KinematicUnit::KinematicUnit( int _ID, Sprite *pSprite, const Vector2D &position
 
 KinematicUnit::~KinematicUnit()
 {
+	for (int i = 0; i < mComponents.size(); ++i)
+	{
+		delete mComponents[i];
+
+		mComponents[i] = NULL;
+	}
+
 	delete mpCurrentSteering;
 }
 
@@ -37,13 +45,16 @@ void KinematicUnit::draw( GraphicsBuffer* pBuffer )
 
 void KinematicUnit::update(float time)
 {
+	for (int i = 0; i < mComponents.size(); ++i)
+		mComponents[i]->update(time);
+
 	Steering* steering;
 	if( mpCurrentSteering != NULL )
 	{
-		steering = CollisionSystem::checkUnitCollision(this);
+		//steering = CollisionSystem::checkUnitCollision(this);
 
-		if (steering == NULL)
-			steering = &gNullSteering;//mpCurrentSteering->getSteering();
+		//if (steering == NULL)
+		steering = mpCurrentSteering->getSteering();
 	}
 	else
 	{
@@ -124,3 +135,7 @@ void KinematicUnit::dynamicArrive( KinematicUnit* pTarget )
 	setSteering( pDynamicArriveSteering );
 }
 
+void KinematicUnit::addComponent(Component* _newComponent)
+{
+	mComponents.push_back(_newComponent);
+}

@@ -13,15 +13,19 @@ enum UnitType
 	ARRIVER,
 	SEEKER,
 	WANDERER,
+	WANDER_SEEK,
+	WANDER_FLEE,
 
 	NUM_TYPES
 };
 
-enum Components
+enum ComponentType
 {
 	WANDER_AND_SEEK,
 	WANDER_AND_FLEE
 };
+
+class Component;
 
 class UnitManager : public Trackable
 {
@@ -48,5 +52,6 @@ public:
 	KinematicUnit* addUnit(UnitType _type, const Vector2D& position, float orientation, const Vector2D& velocity, float rotationVel, float maxVelocity = 1.0f, float maxAcceleration = 1.0f);
 	bool removeUnit(int _ID);
 	void removeRandomUnit();
+	Component* addComponent(ComponentType _type, KinematicUnit* _unit);
 	//bool tagExists(int _ID);
 };
