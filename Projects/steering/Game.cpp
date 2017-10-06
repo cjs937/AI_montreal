@@ -35,7 +35,7 @@ Game::Game()
 	,mpLoopTimer(NULL)
 	,mpMasterTimer(NULL)
 	,mShouldExit(false)
-	,mpFont(NULL)
+	//,mpFont(NULL)
 	,mpSample(NULL)
 	,mBackgroundBufferID(INVALID_ID)
 	//,mSmurfBufferID(INVALID_ID)
@@ -103,22 +103,6 @@ bool Game::init()
 	if( !al_install_mouse() )
 	{
 		printf( "Mouse not installed!\n" ); 
-		return false;
-	}
-
-	//should be somewhere else!
-	al_init_font_addon();
-	if( !al_init_ttf_addon() )
-	{
-		printf( "ttf font addon not initted properly!\n" ); 
-		return false;
-	}
-
-	//actually load the font
-	mpFont = al_load_ttf_font( "cour.ttf", 20, 0 );
-	if( mpFont == NULL )
-	{
-		printf( "ttf font file not loaded properly!\n" ); 
 		return false;
 	}
 
@@ -196,8 +180,6 @@ void Game::cleanup()
 
 	al_destroy_sample(mpSample);
 	mpSample = NULL;
-	al_destroy_font(mpFont);
-	mpFont = NULL;
 
 	//shutdown components
 	al_uninstall_audio();

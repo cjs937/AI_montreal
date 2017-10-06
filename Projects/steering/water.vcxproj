@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="AddUnitMessage.h" />
     <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DynamicArriveSteering.h" />
@@ -36,6 +37,9 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Steering.h" />
+    <ClInclude Include="UiManager.h" />
+    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="UIText.h" />
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="WanderAndFleeComponent.h" />
     <ClInclude Include="WanderAndSeekComponent.h" />
@@ -43,6 +47,7 @@
   <ItemGroup>
     <ClCompile Include="AddUnitMessage.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="DynamicArriveSteering.cpp" />
     <ClCompile Include="DynamicSeekSteering.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -64,6 +69,8 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Steering.cpp" />
+    <ClCompile Include="UiManager.cpp" />
+    <ClCompile Include="UIText.cpp" />
     <ClCompile Include="UnitManager .cpp" />
     <ClCompile Include="WanderAndFleeComponent.cpp" />
     <ClCompile Include="WanderAndSeekComponent.cpp" />

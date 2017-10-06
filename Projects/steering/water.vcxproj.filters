@@ -79,6 +79,15 @@
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="UiManager.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIText.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsBuffer.h">
@@ -165,6 +174,18 @@
     <ClInclude Include="CollisionSystem.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
+    <ClInclude Include="UiManager.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIText.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -208,6 +229,12 @@
     </Filter>
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{5a0cedf9-6816-4208-a75e-b0e556d7e54b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{1547f5f4-647c-4ab9-b72b-3d02335019c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{ef703fc1-fd3d-44bb-ae30-6fbf4ab30ed5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -46,7 +46,6 @@ public:
 	inline UnitManager* getUnitManager() const { return mpUnitManager; };
 	inline Timer* getMasterTimer() const { return mpMasterTimer; };
 	inline double getCurrentTime() const { return mpMasterTimer->getElapsedTime(); };
-	inline ALLEGRO_FONT* getFont() const { return mpFont; };
 	inline void quit() { mShouldExit = true; };
 	KinematicUnit* const getPlayerUnit();//player unit id should always be 0
 
@@ -62,7 +61,6 @@ private:
 	bool mShouldExit;
 
 	//should be somewhere else
-	ALLEGRO_FONT* mpFont;
 	ALLEGRO_SAMPLE* mpSample;
 	IDType mBackgroundBufferID;
 };
