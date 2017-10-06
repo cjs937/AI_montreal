@@ -2,10 +2,16 @@
 #include "Trackable.h"
 
 class KinematicUnit;
+class Steering;
+class Vector2D;
+
+const float UNIT_COLLISION_RADIUS = 0.30f;
 
 class CollisionSystem : public Trackable
 {
 public:
-	static bool checkUnitCollision(KinematicUnit* _unitA, KinematicUnit* _unitB);
+	static Steering* checkUnitCollision(KinematicUnit* _unitA);
 
+private:
+	static float dotProduct(Vector2D _vectorA, Vector2D _vectorB);
 };

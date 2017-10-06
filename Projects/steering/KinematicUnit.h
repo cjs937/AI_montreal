@@ -34,6 +34,7 @@ public:
 	float getMaxAcceleration() const { return mMaxAcceleration; };
 	void setVelocity( const Vector2D& velocity ){ mVelocity = velocity; };
 	int getID() { return mUnitID; };
+	Steering* getSteering() { return mpCurrentSteering; };
 	virtual void setNewOrientation();//face the direction you are moving
 
 	//draw yourself to the indicated buffer

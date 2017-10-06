@@ -39,6 +39,8 @@ PerformanceTracker* gpPerformanceTracker = NULL;
 
 int main(int argc, char **argv)
 {
+	bool silenceConsole = true;
+
 	gpPerformanceTracker = new PerformanceTracker();
 
 	gpPerformanceTracker->startTracking("init");
@@ -76,6 +78,10 @@ int main(int argc, char **argv)
 		shouldExit = gpGame->endLoop();
 
 		gpPerformanceTracker->stopTracking("loop");
+
+		if (silenceConsole)
+			continue;
+
 		cout << "loop took:" << gpPerformanceTracker->getElapsedTime("loop") << "ms";
 		cout << "draw took:" << gpPerformanceTracker->getElapsedTime("draw") << "ms\n";
 

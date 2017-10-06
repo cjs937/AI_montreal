@@ -9,6 +9,7 @@
 #include "KinematicWanderSteering.h"
 #include "DynamicSeekSteering.h"
 #include "DynamicArriveSteering.h"
+#include "CollisionSystem.h"
 
 using namespace std;
 
@@ -39,7 +40,10 @@ void KinematicUnit::update(float time)
 	Steering* steering;
 	if( mpCurrentSteering != NULL )
 	{
-		steering = mpCurrentSteering->getSteering();
+		steering = CollisionSystem::checkUnitCollision(this);
+
+		if (steering == NULL)
+			steering = &gNullSteering;//mpCurrentSteering->getSteering();
 	}
 	else
 	{
