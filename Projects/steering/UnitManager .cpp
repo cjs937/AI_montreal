@@ -15,9 +15,7 @@ typedef std::pair <int, KinematicUnit*> mapPair;
 UnitManager::UnitManager()
 {
 	mPlayerIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp");
-	//mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("ninjastar.bmp");
-	//mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp"); //in case you don't want us to use custom sprites
-	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow2.bmp");
+	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp");
 	mWallBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("wall.bmp");
 
 	GraphicsBuffer* pPlayerBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mPlayerIconBufferID);
