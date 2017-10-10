@@ -29,5 +29,6 @@ public:
 
 	void update(float _dt);
 	UIObject* addObject(UIType _type, Vector2D _position, int _alignmentFlags, bool _isActive = true);
+	bool removeObject(int _ID);
 
 };

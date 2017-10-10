@@ -23,6 +23,7 @@
 #include "InputSystem.h"
 #include "UnitManager.h"
 #include "UiManager.h"
+#include "DebugSystem.h"
 
 Game* gpGame = NULL;
 
@@ -134,6 +135,7 @@ bool Game::init()
 	mpUnitManager = new UnitManager();
 	mpMessageManager = new GameMessageManager();
 	mpUIManager = new UIManager();
+	mpDebugSystem = new DebugSystem();
 	//load buffers
 	mBackgroundBufferID = mpGraphicsBufferManager->loadBuffer("wallpaper.bmp");
 
@@ -145,6 +147,8 @@ bool Game::init()
 	}
 
 	//setup units
+
+	mpUnitManager->generateBorderWall(GRAPHICS_SYSTEM->getWidth(), GRAPHICS_SYSTEM->getHeight());
 	Vector2D pos( 0.0f, 0.0f );
 	Vector2D vel( 0.0f, 0.0f );
 
@@ -181,6 +185,9 @@ void Game::cleanup()
 
 	delete mpUIManager;
 	mpUIManager = NULL;
+
+	delete mpDebugSystem;
+	mpDebugSystem = NULL;
 
 	al_destroy_sample(mpSample);
 	mpSample = NULL;

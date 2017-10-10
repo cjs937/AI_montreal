@@ -29,5 +29,8 @@ void UIText::displayText(std::string _text)
 
 void UIText::update(float _dt)
 {
+	if (!mActive)
+		return;
+
 	al_draw_text(mpFont, mpTextColor->color, mPosition.getX(), mPosition.getY(), mTextAlignment, mCurrentText.c_str());
 }

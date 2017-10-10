@@ -10,9 +10,9 @@ void AddUnitMessage::process()
 	KinematicUnit* newUnit = gpGame->getUnitManager()->addUnit(mUnitType, mPosition, 1.0f, velocity, 0.0, 200.0f, 15.0f);
 
 	if (mUnitType == SEEKER)
-		newUnit->dynamicSeek(gpGame->getPlayerUnit());
+		newUnit->seek(gpGame->getPlayerUnit()->getPosition());
 	else if (mUnitType == ARRIVER)
-		newUnit->dynamicArrive(gpGame->getPlayerUnit());
+		newUnit->arrive(gpGame->getPlayerUnit()->getPosition());
 	else if (mUnitType == WANDERER)
 		newUnit->wander();
 	else if (mUnitType == WANDER_FLEE)

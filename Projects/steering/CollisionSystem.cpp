@@ -4,11 +4,30 @@
 #include "Steering.h"
 #include "Game.h"
 #include "Steering.h"
+#include "TerrainUnit.h"
+#include <vector>
 
-Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit)
+RayCollision::RayCollision(Vector2D _position, Vector2D _normal):position(_position), normal(_normal)
+{}
+RayCollision::~RayCollision() {}
+
+
+Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _steering)
 {
 	if (_unit->getID() == 0)
 		return NULL;
+
+	//RayCollision* wallCheck = rayCast(_unit);
+
+	//if (wallCheck != NULL)
+	//{
+	//	Vector2D target = wallCheck->position + wallCheck->normal * WALL_AVOID;
+	//	_unit->seek(target);
+
+	//	delete wallCheck;
+
+	//	return _unit->getSteering();
+	//}
 
 	float shortestTime = INFINITY;
 
@@ -27,7 +46,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit)
 		{
 			currentTarget = currentUnit->second;
 
-			if (currentTarget->getID() == _unit->getID())
+			if (currentTarget->getID() == _unit->getID() || currentTarget->getID() == 0)
 				continue;
 
 			Vector2D currentRelativePosition = currentTarget->getPosition() - _unit->getPosition();//Vector2D(_unitA->getPosition().getX() - _unitB->getPosition().getX(), _unitA->getPosition().getY() - _unitB->getPosition().getY());
@@ -72,13 +91,96 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit)
 
 	newRelativePos.normalize();
 
-	_unit->getSteering()->setLinear(newRelativePos * _unit->getMaxAcceleration());
-	_unit->getSteering()->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _unit->getSteering()->getLinear()));
+	_steering->setLinear( newRelativePos * _unit->getMaxAcceleration());
+	_steering->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _steering->getLinear()));
 
-	return _unit->getSteering();
+	return _steering;
 }
 
-float magnitude(Vector2D _vector)
+RayCollision* CollisionSystem::rayCast(KinematicUnit* _unit)
+{
+	std::vector<TerrainUnit*> terrainVector = gpGame->getUnitManager()->getTerrain();
+	TerrainUnit* target = NULL;
+
+	for (int i = 0; i < terrainVector.size(); ++i)
+	{
+		if (checkRayIntersection(_unit, terrainVector[i]))
+		{
+			target = terrainVector[i];
+			break;
+		}
+	}
+
+	if (target == NULL)
+		return NULL;
+
+	Vector2D collisionNormal = target->getPosition();
+	collisionNormal.normalize();
+
+	return new RayCollision(target->getPosition(), collisionNormal);
+}
+
+bool CollisionSystem::checkRayIntersection(KinematicUnit* _unit, TerrainUnit* _wall)
+{
+	Vector2D* wallPoints = _wall->getAllPoints();
+	Vector2D rayVector = _unit->getVelocity();
+	rayVector.normalize();
+	rayVector *= UNIT_RAYCAST_DISTANCE;
+
+	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[0], wallPoints[1]))
+	{
+		delete wallPoints;
+		return true;
+	}
+
+	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[0], wallPoints[2]))
+	{
+		delete wallPoints;
+		return true;
+	}
+
+	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[3], wallPoints[1]))
+	{
+		delete wallPoints;
+		return true;
+	}
+
+	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[3], wallPoints[2]))
+	{
+		delete wallPoints;
+		return true;
+	}
+
+}
+
+/*http://afloatingpoint.blogspot.ca/2011/04/2d-polygon-raycasting.html*/
+bool CollisionSystem::rayIntersectsSegment(Vector2D _rayOrigin, Vector2D _rayVector, Vector2D _pointA, Vector2D _pointB)
+{
+	Vector2D segment = _pointB - _pointA;
+	Vector2D segPerp = leftPerp(segment);
+	float perpDot = dotProduct(_rayVector, segPerp);
+
+	if (0.0f <= perpDot && perpDot <= FLT_EPSILON)
+	{
+		return false;
+	}
+
+	Vector2D distance = _pointA - _rayOrigin;
+
+	float t = dotProduct(segPerp, distance) / perpDot;
+	float s = dotProduct(leftPerp(_rayVector), distance) / perpDot;
+
+	return t >= 0.0f && s >= 0.0f && s <= 1.0f;
+
+}
+
+Vector2D CollisionSystem::leftPerp(Vector2D _vector)
+{
+	return Vector2D(_vector.getY(), -_vector.getX());
+}
+
+
+static float magnitude(Vector2D _vector)
 {
 	float x = _vector.getX();
 	float y = _vector.getY();
@@ -93,3 +195,38 @@ float CollisionSystem::dotProduct(Vector2D _vectorA, Vector2D _vectorB)
 
 	return toReturn;
 }
+
+//Steering* CollisionSystem::checkWallCollision(KinematicUnit* _unit)
+//{
+//	std::vector<TerrainUnit*> terrainVector = gpGame->getUnitManager()->getTerrain();
+//
+//	TerrainUnit* target = NULL;
+//	TerrainUnit* currentTarget = NULL;
+//	float shortestDistance = FLT_MAX;
+//
+//	for (int i = 0; i < terrainVector.size(); ++i)
+//	{
+//		currentTarget = terrainVector[i];
+//
+//		Vector2D currentRelativePosition = currentTarget->getPosition() - _unit->getPosition();
+//		float currentDistance = magnitude(currentRelativePosition);
+//
+//		if (currentDistance < magnitude(_unit->getPosition() + WALL_COLLISION_RADIUS) || currentDistance > shortestDistance)
+//			continue;
+//
+//		target = currentTarget;
+//		shortestDistance = currentDistance;
+//	}
+//
+//	if (target == NULL)
+//		return NULL;
+//
+//	Vector2D collisionNorm = target->getPosition();
+//	collisionNorm.normalize;
+//
+//	Steering* newSteering = _unit->getSteering();
+//
+//	newSteering->setLinear(collisionNorm * WALL_AVOID);
+//
+//	return newSteering;
+//}

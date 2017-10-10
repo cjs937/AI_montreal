@@ -18,10 +18,12 @@ class Timer;
 class InputSystem;
 class UnitManager;
 class UIManager;
+class DebugSystem;
 
 const IDType BACKGROUND_SPRITE_ID = 0;
 const IDType PLAYER_ICON_SPRITE_ID = 1;
 const IDType AI_ICON_SPRITE_ID = 2;
+const IDType WALL_SPRITE_ID = 3;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 
@@ -47,6 +49,7 @@ public:
 	inline UnitManager* getUnitManager() const { return mpUnitManager; };
 	inline Timer* getMasterTimer() const { return mpMasterTimer; };
 	inline UIManager* getUIManager() const { return mpUIManager; };
+	inline DebugSystem* getDebugSystem() const { return mpDebugSystem; };
 	inline double getCurrentTime() const { return mpMasterTimer->getElapsedTime(); };
 	inline void quit() { mShouldExit = true; };
 	KinematicUnit* const getPlayerUnit();//player unit id should always be 0
@@ -59,6 +62,7 @@ private:
 	UnitManager* mpUnitManager;
 	InputSystem* mpInputSystem;
 	UIManager* mpUIManager;
+	DebugSystem* mpDebugSystem;
 	Timer* mpLoopTimer;
 	Timer* mpMasterTimer;
 	bool mShouldExit;

@@ -6,6 +6,8 @@
 #include "Component.h"
 #include "WanderAndFleeComponent.h"
 #include "WanderAndSeekComponent.h"
+#include "Sprite.h"
+#include "TerrainUnit.h"
 
 typedef std::pair <UnitType, std::map<int, KinematicUnit*>*> mapListPair;
 typedef std::pair <int, KinematicUnit*> mapPair;
@@ -13,8 +15,10 @@ typedef std::pair <int, KinematicUnit*> mapPair;
 UnitManager::UnitManager()
 {
 	mPlayerIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp");
-	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("ninjastar.bmp");
+	//mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("ninjastar.bmp");
 	//mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp"); //in case you don't want us to use custom sprites
+	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow2.bmp");
+	mWallBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("wall.bmp");
 
 	GraphicsBuffer* pPlayerBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mPlayerIconBufferID);
 	Sprite* pArrowSprite = NULL;
@@ -27,6 +31,13 @@ UnitManager::UnitManager()
 	if (pAIBuffer != NULL)
 	{
 		pEnemyArrow = gpGame->getSpriteManager()->createAndManageSprite(AI_ICON_SPRITE_ID, pAIBuffer, 0, 0, pAIBuffer->getWidth(), pAIBuffer->getHeight());
+	}
+
+	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mWallBufferID);
+	Sprite* wall = NULL;
+	if (wallBuffer != NULL)
+	{
+		gpGame->getSpriteManager()->createAndManageSprite(WALL_SPRITE_ID, wallBuffer, 0, 0, wallBuffer->getWidth(), wallBuffer->getHeight());
 	}
 
 	//first unit id will be 0
@@ -44,6 +55,13 @@ UnitManager::~UnitManager()
 	}
 
 	mMapList.clear();
+
+	for (int i = 0; i < mTerrain.size(); ++i)
+	{
+		delete mTerrain[i];
+
+		mTerrain[i] = NULL;
+	}
 }
 
 std::map<int, KinematicUnit*>* UnitManager::getUnitMap(UnitType _type)
@@ -94,6 +112,11 @@ void UnitManager::update(float _dt)
 			j->second->update(_dt);
 		}
 	}
+
+	for (int i = 0; i < mTerrain.size(); ++i)
+	{
+		mTerrain[i]->update(_dt);
+	}
 }
 
 void UnitManager::draw(GraphicsBuffer* _buffer)
@@ -104,6 +127,11 @@ void UnitManager::draw(GraphicsBuffer* _buffer)
 		{
 			j->second->draw(_buffer);
 		}
+	}
+
+	for (int i = 0; i < mTerrain.size(); ++i)
+	{
+		mTerrain[i]->draw(_buffer);
 	}
 }
 
@@ -146,6 +174,10 @@ Sprite* UnitManager::getUnitSprite(UnitType _unitType)
 	if (_unitType == PLAYER)
 	{
 		spriteID = PLAYER_ICON_SPRITE_ID;
+	}
+	else if (_unitType == WALL)
+	{
+		spriteID = WALL_SPRITE_ID;
 	}
 	else
 	{
@@ -273,4 +305,50 @@ Component* UnitManager::addComponent(ComponentType _type, KinematicUnit* _unit)
 	}
 
 	return newComponent;
+}
+
+void UnitManager::generateBorderWall(int _width, int _height)
+{
+	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mWallBufferID);
+	int wallWidth = wallBuffer->getWidth();// / 2;
+	int wallHeight = wallBuffer->getHeight();// / 2;
+	float currentWidth = 0;//wallWidth / 2;
+	float currentHeight = 0;//wallHeight / 2;
+	bool topOrBottom = true;
+	TerrainUnit* newWall = NULL;
+
+	while (currentHeight < _height)
+	{
+		newWall = new TerrainUnit(getUnitSprite(WALL), Vector2D(currentWidth, currentHeight));
+
+		mTerrain.push_back(newWall);
+
+		if (topOrBottom)
+		{
+			currentWidth += wallWidth;
+
+			while (currentWidth < _width - wallWidth)
+			{
+				TerrainUnit* newWall = new TerrainUnit(getUnitSprite(WALL), Vector2D(currentWidth, currentHeight));
+
+				mTerrain.push_back(newWall);
+
+				currentWidth += wallWidth;
+			}
+
+			topOrBottom = false;
+		}
+
+		currentWidth = _width - wallWidth;
+
+		newWall = new TerrainUnit(getUnitSprite(WALL), Vector2D(currentWidth, currentHeight));
+
+		mTerrain.push_back(newWall);
+
+		currentHeight += wallHeight;
+		currentWidth = 0;
+
+		if (currentHeight + wallHeight >= _height)
+			topOrBottom = true;
+	}
 }

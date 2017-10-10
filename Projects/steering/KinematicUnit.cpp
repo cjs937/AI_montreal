@@ -51,10 +51,14 @@ void KinematicUnit::update(float time)
 	Steering* steering;
 	if( mpCurrentSteering != NULL )
 	{
-		//steering = CollisionSystem::checkUnitCollision(this);
+		Steering* collisionSteering;
 
-		//if (steering == NULL)
 		steering = mpCurrentSteering->getSteering();
+
+		//collisionSteering = CollisionSystem::checkUnitCollision(this, steering);
+
+		//if (collisionSteering != NULL)
+		//	steering = collisionSteering;
 	}
 	else
 	{

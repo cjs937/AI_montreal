@@ -22,6 +22,6 @@ Steering* DynamicSeekSteering::getSteering()
 
 	mLinear.normalize();
 	mLinear *= mpMover->getMaxVelocity();
-	mAngular = 0;
+	mAngular = Kinematic::getOrientationFromVelocity(mpMover->getOrientation(), mLinear); //0;
 	return this;
 }

@@ -16,10 +16,6 @@ UIManager::UIManager()
 	mpDefaultFont = al_load_ttf_font("cour.ttf", 20, 0);
 
 	mAvailalbeIDs.push(0);
-
-	int textID = addObject(TEXT, Vector2D(0, 0), ALLEGRO_ALIGN_LEFT)->getID();
-
-	static_cast<UIText*>(mUIOBjects[textID])->displayText("test");
 }
 
 UIManager::~UIManager()
@@ -65,7 +61,7 @@ UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentF
 	{
 		case TEXT:
 		{
-			newObj = new UIText(newID, _position, mpDefaultFont, new Color(WHITE), static_cast<int>(ALLEGRO_ALIGN_LEFT));
+			newObj = new UIText(newID, _position, mpDefaultFont, new Color(WHITE), static_cast<int>(ALLEGRO_ALIGN_LEFT), "", _isActive);
 			break;
 		}
 		default:
@@ -75,4 +71,16 @@ UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentF
 	mUIOBjects.insert(std::pair<int, UIObject*>(newID, newObj));
 
 	return newObj;
+}
+
+bool UIManager::removeObject(int _ID)
+{
+	if (mUIOBjects.find(_ID) == mUIOBjects.end())
+		return false;
+
+	mAvailalbeIDs.push(_ID);
+
+	mUIOBjects.erase(_ID);
+
+	return true;
 }
