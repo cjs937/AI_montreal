@@ -6,7 +6,7 @@ class KinematicUnit;
 class Steering;
 class TerrainUnit;
 
-const float UNIT_COLLISION_RADIUS = 70.0f;
+const float UNIT_COLLISION_RADIUS = 10.0f;
 const float UNIT_RAYCAST_DISTANCE = 70.0f;
 const float WALL_AVOID = 10.0f;
 
