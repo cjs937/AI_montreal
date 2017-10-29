@@ -17,7 +17,8 @@ void TerrainUnit::draw(GraphicsBuffer* _buffer)
 
 }
 
-Vector2D* TerrainUnit::getAllPoints() // topLeft = 0, topRight, bottomLeft, bottomRight
+/* topLeft = 0, topRight, bottomLeft, bottomRight */
+Vector2D* TerrainUnit::getAllPoints() 
 {
 	float width = mpSprite->getWidth();
 	float height = mpSprite->getHeight();

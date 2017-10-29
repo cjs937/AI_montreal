@@ -149,7 +149,7 @@ bool Game::init()
 	//setup units
 
 	mpUnitManager->generateBorderWall(GRAPHICS_SYSTEM->getWidth(), GRAPHICS_SYSTEM->getHeight());
-	Vector2D pos( 0.0f, 0.0f );
+	Vector2D pos( 500.0f, 200.0f );
 	Vector2D vel( 0.0f, 0.0f );
 
 	mpUnitManager->addUnit(PLAYER, pos, 1, vel, 0.0f, 200.0f, 10.0f );
@@ -226,8 +226,6 @@ void Game::processLoop()
 	mpMessageManager->processMessagesForThisframe();
 
 	mpInputSystem->update();
-
-	mpGraphicsSystem->swap();
 }
 
 

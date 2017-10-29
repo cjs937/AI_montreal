@@ -6,28 +6,27 @@
 #include "Steering.h"
 #include "TerrainUnit.h"
 #include <vector>
-
-RayCollision::RayCollision(Vector2D _position, Vector2D _normal):position(_position), normal(_normal)
-{}
-RayCollision::~RayCollision() {}
-
+#include "Ray.h"
 
 Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _steering)
 {
-	if (_unit->getID() == 0)
-		return NULL;
+	//if (_unit->getID() == 0)
+	//	return NULL;
 
-	//RayCollision* wallCheck = rayCast(_unit);
+	RayCollision* wallCheck = rayCast(_unit);
 
-	//if (wallCheck != NULL)
-	//{
-	//	Vector2D target = wallCheck->position + wallCheck->normal * WALL_AVOID;
-	//	_unit->seek(target);
+	if (wallCheck != NULL)
+	{
+		Vector2D normal = wallCheck->position;
+		normal.normalize();
 
-	//	delete wallCheck;
+		Vector2D target = wallCheck->position + normal * WALL_AVOID;
+		_unit->seek(target);
 
-	//	return _unit->getSteering();
-	//}
+		delete wallCheck;
+
+		return _unit->getSteering();
+	}
 
 	float shortestTime = INFINITY;
 
@@ -100,80 +99,96 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 RayCollision* CollisionSystem::rayCast(KinematicUnit* _unit)
 {
 	std::vector<TerrainUnit*> terrainVector = gpGame->getUnitManager()->getTerrain();
-	TerrainUnit* target = NULL;
+	RayCollision* collision = NULL;
 
 	for (int i = 0; i < terrainVector.size(); ++i)
 	{
-		if (checkRayIntersection(_unit, terrainVector[i]))
+		collision = checkRayIntersection(_unit, terrainVector[i]);
+
+		if (collision != NULL)
 		{
-			target = terrainVector[i];
 			break;
 		}
 	}
 
-	if (target == NULL)
-		return NULL;
-
-	Vector2D collisionNormal = target->getPosition();
-	collisionNormal.normalize();
-
-	return new RayCollision(target->getPosition(), collisionNormal);
+	return collision;
 }
 
-bool CollisionSystem::checkRayIntersection(KinematicUnit* _unit, TerrainUnit* _wall)
+RayCollision* CollisionSystem::checkRayIntersection(KinematicUnit* _unit, TerrainUnit* _wall)
 {
+	RayCollision* collision = NULL;
 	Vector2D* wallPoints = _wall->getAllPoints();
-	Vector2D rayVector = _unit->getVelocity();
-	rayVector.normalize();
-	rayVector *= UNIT_RAYCAST_DISTANCE;
+	Ray* rayCast = new Ray(_unit->getPosition(), UNIT_RAYCAST_DISTANCE, _unit->getVelocity());
 
-	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[0], wallPoints[1]))
+	for (int i = 0; i < 4; ++i)// checks all sides of the wall
 	{
-		delete wallPoints;
-		return true;
+		switch (i)
+		{
+		case 0:
+			collision = rayIntersectsSegment(rayCast, wallPoints[0], wallPoints[1]);
+			break;
+		case 1:
+			collision = rayIntersectsSegment(rayCast, wallPoints[0], wallPoints[2]);
+			break;
+		case 2:
+			collision = rayIntersectsSegment(rayCast, wallPoints[3], wallPoints[1]);
+			break;
+		case 3:
+			collision = rayIntersectsSegment(rayCast, wallPoints[3], wallPoints[2]);
+			break;
+		default:
+			collision = NULL;
+			break;
+		}
+
+		if (collision->hit)
+		{
+			break;
+		}
+		else if (i == 3) // if end of loop
+		{
+			delete collision;
+
+			collision = NULL;
+		}
 	}
 
-	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[0], wallPoints[2]))
-	{
-		delete wallPoints;
-		return true;
-	}
+	delete wallPoints;
+	delete rayCast;
 
-	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[3], wallPoints[1]))
-	{
-		delete wallPoints;
-		return true;
-	}
-
-	if (rayIntersectsSegment(_unit->getPosition(), rayVector, wallPoints[3], wallPoints[2]))
-	{
-		delete wallPoints;
-		return true;
-	}
+	return collision;
 
 }
 
-/*http://afloatingpoint.blogspot.ca/2011/04/2d-polygon-raycasting.html*/
-bool CollisionSystem::rayIntersectsSegment(Vector2D _rayOrigin, Vector2D _rayVector, Vector2D _pointA, Vector2D _pointB)
+/*https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect*/
+RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA, Vector2D _pointB)
 {
-	Vector2D segment = _pointB - _pointA;
-	Vector2D segPerp = leftPerp(segment);
-	float perpDot = dotProduct(_rayVector, segPerp);
+	//Ray = p + tr
+	//Wall(a, b) = a + t'd  
+	//d = (b - a)
 
-	if (0.0f <= perpDot && perpDot <= FLT_EPSILON)
-	{
-		return false;
-	}
+	Vector2D wall_d = _pointB - _pointA;
 
-	Vector2D distance = _pointA - _rayOrigin;
+	//t = (a - p) x d / (r x d)
+	float t_ray = crossProduct((_pointA - _ray->getSourcePoint()), wall_d) / crossProduct(_ray->getDirection(), wall_d);
 
-	float t = dotProduct(segPerp, distance) / perpDot;
-	float s = dotProduct(leftPerp(_rayVector), distance) / perpDot;
+	//t' = (a - p) x r / ( r x d)
+	float t_wall = crossProduct((_pointA - _ray->getSourcePoint()), _ray->getDirection()) / crossProduct(_ray->getDirection(), wall_d);
 
-	return t >= 0.0f && s >= 0.0f && s <= 1.0f;
+	//hit if r x s != 0 && 0 <= t <= 1 && 0 <= t' <= 1
+	bool hit = (crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
 
+	Vector2D collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
+		Vector2D();
+
+	return new RayCollision(hit, collisionPoint);
 }
 
+
+float CollisionSystem::crossProduct(Vector2D _vectorA, Vector2D _vectorB)
+{
+	return ((_vectorA.getX() * _vectorB.getY()) - (_vectorA.getY() * _vectorB.getX()));
+}
 Vector2D CollisionSystem::leftPerp(Vector2D _vector)
 {
 	return Vector2D(_vector.getY(), -_vector.getX());

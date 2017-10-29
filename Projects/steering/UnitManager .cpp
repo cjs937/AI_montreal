@@ -8,6 +8,7 @@
 #include "WanderAndSeekComponent.h"
 #include "Sprite.h"
 #include "TerrainUnit.h"
+#include "Vector2D.h"
 
 typedef std::pair <UnitType, std::map<int, KinematicUnit*>*> mapListPair;
 typedef std::pair <int, KinematicUnit*> mapPair;
