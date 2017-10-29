@@ -37,6 +37,7 @@
     <ClInclude Include="KinematicWanderSteering.h" />
     <ClInclude Include="PlayerMoveToMessage.h" />
     <ClInclude Include="QuitGameMessage.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="RemoveRandUnitMessage.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />

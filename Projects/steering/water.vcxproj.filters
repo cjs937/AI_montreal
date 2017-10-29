@@ -177,9 +177,6 @@
     <ClInclude Include="Component.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionSystem.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
     <ClInclude Include="UiManager.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
@@ -212,6 +209,12 @@
     </ClInclude>
     <ClInclude Include="TerrainUnit.h">
       <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Header Files\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Header Files\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +265,9 @@
     </Filter>
     <Filter Include="Source Files\UI">
       <UniqueIdentifier>{ef703fc1-fd3d-44bb-ae30-6fbf4ab30ed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Collisions">
+      <UniqueIdentifier>{c342ddc7-27b2-4aa7-ae0a-d68d397b53f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
