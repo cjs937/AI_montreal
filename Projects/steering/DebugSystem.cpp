@@ -48,3 +48,8 @@ void DebugSystem::toggleActivation()
 
 	mUIText->setActive(mIsActive);
 }
+
+void DebugSystem::DebugVelocityControl()
+{
+
+}

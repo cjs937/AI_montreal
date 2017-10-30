@@ -7,6 +7,9 @@ enum DebugMode
 	VELOCITY_CONTROL,
 	REACTION_RADIUS,
 	ANGULAR_VELOCITY,
+	COHESION,
+	SEPARATION,
+	ALIGNMENT,
 	NUM_MODES
 };
 
@@ -32,4 +35,13 @@ private:
 	DebugMode mCurrentMode;
 	bool mIsActive;
 	UIText* mUIText;
+	int mCurrentValue;
+	int mNumValues;
+
+	void DebugVelocityControl();
+	void DebugReactionRadius();
+	void DebugAngularVelocity();
+	void DebugCohesion();
+	void DebugSeparation();
+	void DebugAlignment();
 };

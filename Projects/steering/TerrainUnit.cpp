@@ -28,5 +28,7 @@ Vector2D* TerrainUnit::getAllPoints()
 	Vector2D bottomLeft = Vector2D(topLeft.getX(), mPosition.getY() + height);
 	Vector2D bottomRight = Vector2D(topRight.getX(), bottomLeft.getY());
 
-	return new Vector2D[4]{ topLeft, topRight, bottomLeft, bottomRight };
+	Vector2D* pointArray = new Vector2D[4]{ topLeft, topRight, bottomLeft, bottomRight };
+
+	return pointArray;
 }

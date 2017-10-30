@@ -10,8 +10,8 @@
 
 Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _steering)
 {
-	//if (_unit->getID() == 0)
-	//	return NULL;
+	if (_unit->getID() == 0)
+		return NULL;
 
 	RayCollision* wallCheck = rayCast(_unit);
 
@@ -20,7 +20,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 		Vector2D normal = wallCheck->position;
 		normal.normalize();
 
-		Vector2D target = wallCheck->position + normal * WALL_AVOID;
+		Vector2D target = wallCheck->position + normal * -WALL_AVOID;
 		_unit->seek(target);
 
 		delete wallCheck;
@@ -145,15 +145,13 @@ RayCollision* CollisionSystem::checkRayIntersection(KinematicUnit* _unit, Terrai
 		{
 			break;
 		}
-		else if (i == 3) // if end of loop
-		{
-			delete collision;
 
-			collision = NULL;
-		}
+		delete collision;
+
+		collision = NULL;
 	}
 
-	delete wallPoints;
+	delete[] wallPoints;
 	delete rayCast;
 
 	return collision;
@@ -163,23 +161,32 @@ RayCollision* CollisionSystem::checkRayIntersection(KinematicUnit* _unit, Terrai
 /*https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect*/
 RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA, Vector2D _pointB)
 {
+	bool hit = false;
+	Vector2D collisionPoint = Vector2D();
 	//Ray = p + tr
 	//Wall(a, b) = a + t'd  
 	//d = (b - a)
 
 	Vector2D wall_d = _pointB - _pointA;
 
-	//t = (a - p) x d / (r x d)
-	float t_ray = crossProduct((_pointA - _ray->getSourcePoint()), wall_d) / crossProduct(_ray->getDirection(), wall_d);
+	float rXd = crossProduct(_ray->getDirection(), wall_d);
 
-	//t' = (a - p) x r / ( r x d)
-	float t_wall = crossProduct((_pointA - _ray->getSourcePoint()), _ray->getDirection()) / crossProduct(_ray->getDirection(), wall_d);
+	if (rXd == 0)
+		hit = false;
+	else
+	{
+		//t = (a - p) x d / (r x d)
+		float t_ray = crossProduct((_pointA - _ray->getSourcePoint()), wall_d) / rXd;
 
-	//hit if r x s != 0 && 0 <= t <= 1 && 0 <= t' <= 1
-	bool hit = (crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
+		//t' = (a - p) x r / ( r x d)
+		float t_wall = crossProduct((_pointA - _ray->getSourcePoint()), _ray->getDirection()) / crossProduct(_ray->getDirection(), wall_d);
 
-	Vector2D collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
-		Vector2D();
+		//hit if r x s != 0 && 0 <= t <= 1 && 0 <= t' <= 1
+		hit = (crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
+
+		Vector2D collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
+			Vector2D();
+	}
 
 	return new RayCollision(hit, collisionPoint);
 }

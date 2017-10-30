@@ -42,6 +42,10 @@ private:
 
 	Sprite* getUnitSprite(UnitType _unitType);
 
+	float mUnitMaxVelocity;
+	float mUnitMaxRotationVelocity;
+	float mUnitSeparationThreshold;
+	float mUnitSeparationDecay;
 
 public:
 	UnitManager();
@@ -59,5 +63,9 @@ public:
 	bool removeUnit(int _ID);
 	void removeRandomUnit();
 	Component* addComponent(ComponentType _type, KinematicUnit* _unit);
+	float getSeparationThreshold() { return mUnitSeparationThreshold; };
+	float getSeparationDecay() { return mUnitSeparationDecay; };
+	float getMaxVelocity() { return mUnitMaxVelocity; };
+	float getMaxRotation() { return mUnitMaxRotationVelocity; };
 	//bool tagExists(int _ID);
 };

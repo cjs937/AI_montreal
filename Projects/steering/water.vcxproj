@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddUnitMessage.h" />
+    <ClInclude Include="BlendedSteering.h" />
     <ClInclude Include="ChangeAngularVelocityMessage.h" />
     <ClInclude Include="ChangeReactionRadiusMessage.h" />
     <ClInclude Include="ChangeVelocityMessage.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="QuitGameMessage.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RemoveRandUnitMessage.h" />
+    <ClInclude Include="SeparationSteering.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Steering.h" />
@@ -54,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddUnitMessage.cpp" />
+    <ClCompile Include="BlendedSteering.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="DebugSystem.cpp" />
@@ -75,6 +78,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerMoveToMessage.cpp" />
     <ClCompile Include="RemoveRandUnitMessage.cpp" />
+    <ClCompile Include="SeparationSteering.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Steering.cpp" />
@@ -90,7 +94,7 @@
     <RootNamespace>allegrotest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>steering</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -102,7 +106,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

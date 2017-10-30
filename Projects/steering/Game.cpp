@@ -226,6 +226,8 @@ void Game::processLoop()
 	mpMessageManager->processMessagesForThisframe();
 
 	mpInputSystem->update();
+
+	mpGraphicsSystem->swap();
 }
 
 
