@@ -7,7 +7,7 @@ void AddUnitMessage::process()
 {
 	Vector2D velocity = Vector2D();
 
-	KinematicUnit* newUnit = gpGame->getUnitManager()->addUnit(mUnitType, mPosition, 1.0f, velocity, 0.0, 200.0f, 15.0f);
+	KinematicUnit* newUnit = gpGame->getUnitManager()->addUnit(mUnitType, mPosition, 1.0f, velocity, 0.0, gpGame->getUnitManager()->getMaxVelocity());
 
 	if (mUnitType == SEEKER)
 		newUnit->seek(gpGame->getPlayerUnit()->getPosition());

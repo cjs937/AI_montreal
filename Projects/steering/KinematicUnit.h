@@ -60,6 +60,8 @@ private:
 	float mMaxVelocity;
 	float mMaxAcceleration;
 	int mUnitID;
+
+protected:
 	void setSteering( Steering* pSteering );
 
 };

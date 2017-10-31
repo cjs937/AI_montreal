@@ -9,12 +9,20 @@
 #include "Sprite.h"
 #include "TerrainUnit.h"
 #include "Vector2D.h"
+#include "Boid.h"
 
 typedef std::pair <UnitType, std::map<int, KinematicUnit*>*> mapListPair;
 typedef std::pair <int, KinematicUnit*> mapPair;
 
 UnitManager::UnitManager()
 {
+
+	mUnitMaxVelocity = DEFAULT_MAX_VEL;
+	mUnitMaxRotationVelocity = DEFAULT_MAX_ROTATION;
+	mUnitSeparationThreshold = DEFAULT_SEPARATION_THRESHOLD;
+	mUnitSeparationDecay = DEFAULT_SEPARATION_DECAY;
+	mBoidNeighborRadius = DEFAULT_NEIGHBOR_RADIUS;
+
 	mPlayerIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp");
 	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp");
 	mWallBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("wall.bmp");
@@ -159,7 +167,14 @@ KinematicUnit* UnitManager::addUnit(UnitType _type, const Vector2D& position, fl
 	if (mAvailableIDs.empty())
 		mAvailableIDs.push(newID + 1);
 
-	KinematicUnit* newUnit = new KinematicUnit(newID, unitSprite, position, orientation, velocity, rotationVel, maxVelocity, maxAcceleration);
+	KinematicUnit* newUnit;
+
+	if (_type == BOID)
+	{
+		newUnit = new Boid(newID, unitSprite, position, orientation, velocity, rotationVel, maxVelocity, maxAcceleration);
+	}
+	else
+		newUnit = new KinematicUnit(newID, unitSprite, position, orientation, velocity, rotationVel, maxVelocity, maxAcceleration);
 
 	mMapList[_type]->insert(mapPair(newID, newUnit));
 

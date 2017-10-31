@@ -28,7 +28,7 @@ Steering* KinematicArriveSteering::getSteering()
 	//message*/
 
 	//inside the satisfaction radius?
-	if( mLinear.getLengthSquared() < mSatisfactionRadius * mSatisfactionRadius )
+	if( mLinear.getLengthSquared() < mSatisfactionRadius )
 	{
 		mLinear = gZeroVector2D;
 		mAngular = mpMover->getOrientation();
@@ -40,7 +40,7 @@ Steering* KinematicArriveSteering::getSteering()
 
 	float maxVelocity = mpMover->getMaxVelocity();//for efficiency
 
-	if( mLinear.getLengthSquared() > maxVelocity * maxVelocity )//velocity too great?
+	if( mLinear.getLengthSquared() > maxVelocity )//velocity too great?
 	{
 		//cap the velocity
 		mLinear.normalize();
@@ -49,5 +49,6 @@ Steering* KinematicArriveSteering::getSteering()
 
 	mAngular = Kinematic::getOrientationFromVelocity( mpMover->getOrientation(), mLinear );
 
+	//std::cout << mLinear.getX() << " " << mLinear.getY() << std::endl;
 	return this;
 }

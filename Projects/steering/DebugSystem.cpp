@@ -53,3 +53,14 @@ void DebugSystem::DebugVelocityControl()
 {
 
 }
+
+void DebugReactionRadius()
+{}
+void DebugAngularVelocity()
+{}
+void DebugCohesion()
+{}
+void DebugSeparation()
+{}
+void DebugAlignment()
+{}

@@ -12,7 +12,7 @@ SeparationSteering::~SeparationSteering()
 
 Steering* SeparationSteering::getSteering()
 {
-	Steering* newSteering = new Steering();
+	Steering* newSteering = this;
 
 	std::map<UnitType, std::map<int, KinematicUnit*>*>* unitMap = gpGame->getUnitManager()->getMapList();
 
@@ -39,7 +39,7 @@ Steering* SeparationSteering::getSteering()
 
 				direction.normalize();
 
-				newSteering->setLinear(newSteering->getLinear() + separationStrength * direction);
+				newSteering->setLinear(newSteering->getLinear() + Vector2D(direction.getX() * separationStrength, direction.getY() * separationStrength));
 			}
 		}
 	}

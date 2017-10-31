@@ -51,18 +51,15 @@ void KinematicUnit::update(float time)
 	Steering* steering;
 	if( mpCurrentSteering != NULL )
 	{
-		//Steering* collisionSteering;
 
 		steering = mpCurrentSteering->getSteering();
+
+		Steering* collisionSteering;
 
 		collisionSteering =	CollisionSystem::checkUnitCollision(this, steering);
 
 		if (collisionSteering != NULL)
 			steering = collisionSteering;
-
-		//steering = CollisionSystem::checkUnitCollision(this, mpCurrentSteering);
-
-		//if (steering == NULL)
 	}
 	else
 	{
@@ -97,7 +94,7 @@ void KinematicUnit::update(float time)
 //private - deletes old Steering before setting
 void KinematicUnit::setSteering( Steering* pSteering )
 {
-	delete mpCurrentSteering;
+ 	delete mpCurrentSteering;
 
 	mpCurrentSteering = pSteering;
 }

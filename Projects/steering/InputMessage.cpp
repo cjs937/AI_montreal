@@ -2,13 +2,9 @@
 #include "InputSystem.h"
 #include "Game.h"
 #include "GameMessageManager.h"
-#include "PlayerMoveToMessage.h"
-#include "AddUnitMessage.h"
-#include "RemoveRandUnitMessage.h"
-#include "QuitGameMessage.h"
 #include "UnitManager.h"
-#include "DebugSystem.h"
-#include "UIText.h"
+#include "MessageIncludes.h"
+
 void InputMessage::process()
 {
 	GameMessage* newMessage = NULL;
@@ -61,9 +57,7 @@ void InputMessage::process()
 	{
 		if (mInputType == KEY_DOWN)
 		{
-			//newMessage = new AddUnitMessage(WANDERER, Vector2D(playerPosition.getX() + 200, 0));
-			gpGame->getDebugSystem()->toggleActivation();
-			//gpGame->getDebugSystem()->getDebugText()->displayText("test");
+			newMessage = new AddBoidsMessage(5, Vector2D(20, 0));
 		}
 		break;
 	}

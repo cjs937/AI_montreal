@@ -16,7 +16,7 @@ enum UnitType
 	WANDER_SEEK,
 	WANDER_FLEE,
 	WALL,
-
+	BOID,
 	NUM_TYPES
 };
 
@@ -25,6 +25,13 @@ enum ComponentType
 	WANDER_AND_SEEK,
 	WANDER_AND_FLEE
 };
+
+const float DEFAULT_MAX_VEL = 100.0f;
+const float DEFAULT_MAX_ROTATION = 100.0f;//0.5f;
+const float DEFAULT_SEPARATION_THRESHOLD = 40.0f;
+const float DEFAULT_SEPARATION_DECAY = 10.0f;
+const float DEFAULT_NEIGHBOR_RADIUS = 100.0f;
+
 
 class Component;
 class TerrainUnit;
@@ -46,6 +53,7 @@ private:
 	float mUnitMaxRotationVelocity;
 	float mUnitSeparationThreshold;
 	float mUnitSeparationDecay;
+	float mBoidNeighborRadius;
 
 public:
 	UnitManager();
@@ -67,5 +75,6 @@ public:
 	float getSeparationDecay() { return mUnitSeparationDecay; };
 	float getMaxVelocity() { return mUnitMaxVelocity; };
 	float getMaxRotation() { return mUnitMaxRotationVelocity; };
+	float getNeighborRadius() { return mBoidNeighborRadius; };
 	//bool tagExists(int _ID);
 };

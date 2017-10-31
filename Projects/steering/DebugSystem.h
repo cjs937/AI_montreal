@@ -1,5 +1,6 @@
 #pragma once
 #include "Trackable.h"
+#include <map>
 
 enum DebugMode
 {
@@ -13,6 +14,15 @@ enum DebugMode
 	NUM_MODES
 };
 
+struct DebugTextObject
+{
+	DebugMode mode;
+	bool isActive;
+	UIText* text;
+
+	//DebugTextObject(DebugMode _mode, std::string _sampleText, )
+};
+
 class UIText;
 
 class DebugSystem : public Trackable
@@ -22,7 +32,7 @@ public:
 	DebugSystem();
 	~DebugSystem();
 
-	inline UIText* getDebugText() { return mUIText; };
+	//inline UIText* getDebugText() { return mUIText; };
 	inline DebugMode getCurrentMode() { return mCurrentMode; };
 	inline bool isActive() { return mIsActive; };
 	inline void setCurrentMode(DebugMode _mode) { mCurrentMode = _mode; };
@@ -34,7 +44,7 @@ public:
 private:
 	DebugMode mCurrentMode;
 	bool mIsActive;
-	UIText* mUIText;
+	std::map<DebugMode, UIText*> mDebugText;
 	int mCurrentValue;
 	int mNumValues;
 

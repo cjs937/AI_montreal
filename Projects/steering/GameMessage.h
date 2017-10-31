@@ -9,6 +9,7 @@ enum MessageType
 	INPUT_MESSAGE,
 	ADD_UNIT,
 	REMOVE_RAND_UNIT,
+	ADD_BOIDS,
 	QUIT_GAME
 };
 

@@ -7,6 +7,8 @@
 #include "TerrainUnit.h"
 #include <vector>
 #include "Ray.h"
+#include "Utility.h"
+#include "KinematicSeekSteering.h"
 
 Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _steering)
 {
@@ -21,11 +23,18 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 		normal.normalize();
 
 		Vector2D target = wallCheck->position + normal * -WALL_AVOID;
-		_unit->seek(target);
+		
+		Steering* toReturn = (new KinematicSeekSteering(_unit, target))->getSteering();//pSeekSteering->getSteering();
+
+		_steering->setLinear(toReturn->getLinear());
+
+		_steering->setAngular(toReturn->getAngular());
 
 		delete wallCheck;
 
-		return _unit->getSteering();
+		delete toReturn;
+
+		return _steering;
 	}
 
 	float shortestTime = INFINITY;
@@ -41,7 +50,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 
 	for (std::map<UnitType, std::map<int, KinematicUnit*>*>::iterator currentMap = mapList->begin(); currentMap != mapList->end(); ++currentMap)
 	{
-		for (std::map<int, KinematicUnit*>::iterator currentUnit = currentMap->second->begin(); currentUnit != currentMap->second->end(); ++currentUnit) 
+		for (std::map<int, KinematicUnit*>::iterator currentUnit = currentMap->second->begin(); currentUnit != currentMap->second->end(); ++currentUnit)
 		{
 			currentTarget = currentUnit->second;
 
@@ -52,21 +61,26 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 			Vector2D currentRelativeVelocity = currentTarget->getVelocity() - _unit->getVelocity();//Vector2D(_unitA->getVelocity().getX() - _unitB->getPosition().getX(), _unitA->getVelocity().getY() - _unitB->getVelocity.getY());
 			float relativeSpeed = currentRelativeVelocity.getLength();//magnitude(relativeVelocity);
 
-			float collisionTime = dotProduct(currentRelativePosition, currentRelativeVelocity) / (relativeSpeed * relativeSpeed);
-
-			float currentDistance = relativePosition.getLength();//magnitude(relativePosition);
-			float currentSeparation = currentDistance - relativeSpeed * collisionTime;
-
-			if (currentSeparation > 2 * UNIT_COLLISION_RADIUS || 
-				!(0.0f < collisionTime && collisionTime < shortestTime))
+			if (relativeSpeed == 0)
 				continue;
 
-			shortestTime = collisionTime;
-			target = currentTarget;
-			minSeparation = currentSeparation;
-			distance = currentDistance;
-			relativePosition = currentRelativePosition;
-			relativeVelocity = currentRelativeVelocity;
+			float collisionTime = Utility::dotProduct(currentRelativePosition, currentRelativeVelocity) / (relativeSpeed * relativeSpeed);
+
+			float currentDistance = relativePosition.getLengthSquared();//magnitude(relativePosition);
+			float currentSeparation = currentDistance - relativeSpeed * collisionTime;
+
+			if (currentSeparation > 2 * UNIT_COLLISION_RADIUS)
+				continue;
+
+			if (0.0f < collisionTime && collisionTime < shortestTime)
+			{
+				shortestTime = collisionTime;
+				target = currentTarget;
+				minSeparation = currentSeparation;
+				distance = currentDistance;
+				relativePosition = currentRelativePosition;
+				relativeVelocity = currentRelativeVelocity;
+			}
 		}
 	}
 
@@ -75,6 +89,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 		std::cout << "NONE\n";
 		return NULL;
 	}
+
 	std::cout << _unit->getID() << " " << "collision with " << target->getID() << "\n";
 
 	Vector2D newRelativePos;
@@ -91,7 +106,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 	newRelativePos.normalize();
 
 	_steering->setLinear( newRelativePos * -1.0f * _unit->getMaxAcceleration());
-	_steering->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _steering->getLinear()));
+	//_steering->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _steering->getLinear()));
 
 	return _steering;
 }
@@ -169,54 +184,28 @@ RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA,
 
 	Vector2D wall_d = _pointB - _pointA;
 
-	float rXd = crossProduct(_ray->getDirection(), wall_d);
+	float rXd = Utility::crossProduct(_ray->getDirection(), wall_d);
 
 	if (rXd == 0)
 		hit = false;
 	else
 	{
 		//t = (a - p) x d / (r x d)
-		float t_ray = crossProduct((_pointA - _ray->getSourcePoint()), wall_d) / rXd;
+		float t_ray = Utility::crossProduct((_pointA - _ray->getSourcePoint()), wall_d) / rXd;
 
 		//t' = (a - p) x r / ( r x d)
-		float t_wall = crossProduct((_pointA - _ray->getSourcePoint()), _ray->getDirection()) / crossProduct(_ray->getDirection(), wall_d);
+		float t_wall = Utility::crossProduct((_pointA - _ray->getSourcePoint()), _ray->getDirection()) / Utility::crossProduct(_ray->getDirection(), wall_d);
 
 		//hit if r x s != 0 && 0 <= t <= 1 && 0 <= t' <= 1
-		hit = (crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
+		hit = (Utility::crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
 
-		Vector2D collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
+		collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
 			Vector2D();
 	}
 
 	return new RayCollision(hit, collisionPoint);
 }
 
-
-float CollisionSystem::crossProduct(Vector2D _vectorA, Vector2D _vectorB)
-{
-	return ((_vectorA.getX() * _vectorB.getY()) - (_vectorA.getY() * _vectorB.getX()));
-}
-Vector2D CollisionSystem::leftPerp(Vector2D _vector)
-{
-	return Vector2D(_vector.getY(), -_vector.getX());
-}
-
-
-static float magnitude(Vector2D _vector)
-{
-	float x = _vector.getX();
-	float y = _vector.getY();
-
-	return sqrt((x * x + y * y));
-}
-
-
-float CollisionSystem::dotProduct(Vector2D _vectorA, Vector2D _vectorB)
-{
-	float toReturn = _vectorA.getX() * _vectorB.getX() + _vectorA.getY() * _vectorB.getY();
-
-	return toReturn;
-}
 
 //Steering* CollisionSystem::checkWallCollision(KinematicUnit* _unit)
 //{

@@ -7,25 +7,33 @@ BlendedSteering::BlendedSteering()
 
 BlendedSteering::~BlendedSteering()
 {
+	for (int i = 0; i < mBehaviors.size(); ++i)
+	{
+		delete mBehaviors[i];
+
+		mBehaviors[i] = NULL;
+	}
+
 	mBehaviors.clear();
 }
 
 Steering* BlendedSteering::getSteering()
 {
-	Steering* steering = new Steering();
+	Steering* steering = this;
+	mLinear = Vector2D();
+	mAngular = 0;
+
 	float maxVelocity = gpGame->getUnitManager()->getMaxVelocity();
 	float maxRotation = gpGame->getUnitManager()->getMaxRotation();
 
 	for (int i = 0; i < mBehaviors.size(); ++i)//mBehaviors.begin(); i != mBehaviors.end(); ++i)
 	{
-		Steering* newSteering = mBehaviors[i]->steeringBehavior->getSteering();
+		Steering* currentSteering = mBehaviors[i]->steeringBehavior->getSteering();
 		float weight = mBehaviors[i]->weight;
 
-		steering->setLinear(steering->getLinear() + newSteering->getLinear() * weight);
+		steering->setLinear(steering->getLinear() + currentSteering->getLinear() * weight);
 
-		steering->setAngular(steering->getAngular() + newSteering->getAngular() * weight);
-
-		delete newSteering;
+		steering->setAngular(steering->getAngular() + currentSteering->getAngular() * weight);
 	}
 
 	steering->setLinear(Vector2D(min(steering->getLinear().getX(), maxVelocity), min(steering->getLinear().getY(), maxVelocity)));

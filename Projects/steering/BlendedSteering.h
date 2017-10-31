@@ -8,14 +8,19 @@ public:
 	BlendedSteeringBehavior(Steering* _steeringBehavior, float _weight) : steeringBehavior(_steeringBehavior), weight(_weight)
 	{}
 
-	~BlendedSteeringBehavior() {};
+	~BlendedSteeringBehavior() 
+	{
+		delete steeringBehavior;
+
+		steeringBehavior = NULL;
+	};
 
 	Steering* steeringBehavior;
 	float weight;
 
 };
 
-class BlendedSteering : Steering
+class BlendedSteering : public Steering
 {
 private:
 	std::vector<BlendedSteeringBehavior*> mBehaviors;
@@ -25,7 +30,7 @@ public:
 	BlendedSteering();
 	~BlendedSteering();
 
-	Steering* getSteering() override;
+	Steering* getSteering();
 	std::vector<BlendedSteeringBehavior*> getBehaviors() { return mBehaviors; };
 
 	void addBehavior(Steering* _newBehavior, float _weight = 1);

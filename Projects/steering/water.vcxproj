@@ -11,11 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddBoidsMessage.h" />
     <ClInclude Include="AddUnitMessage.h" />
+    <ClInclude Include="Boid.h" />
+    <ClInclude Include="BoidAlignSteering.h" />
     <ClInclude Include="BlendedSteering.h" />
     <ClInclude Include="ChangeAngularVelocityMessage.h" />
     <ClInclude Include="ChangeReactionRadiusMessage.h" />
     <ClInclude Include="ChangeVelocityMessage.h" />
+    <ClInclude Include="CohesionSteering.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -36,6 +40,7 @@
     <ClInclude Include="KinematicSeekSteering.h" />
     <ClInclude Include="KinematicUnit.h" />
     <ClInclude Include="KinematicWanderSteering.h" />
+    <ClInclude Include="MessageIncludes.h" />
     <ClInclude Include="PlayerMoveToMessage.h" />
     <ClInclude Include="QuitGameMessage.h" />
     <ClInclude Include="Ray.h" />
@@ -51,12 +56,17 @@
     <ClInclude Include="UIText.h" />
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="UpdateDebugMessage.h" />
+    <ClInclude Include="Utility.h" />
     <ClInclude Include="WanderAndFleeComponent.h" />
     <ClInclude Include="WanderAndSeekComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddBoidsMessage.cpp" />
     <ClCompile Include="AddUnitMessage.cpp" />
+    <ClCompile Include="Boid.cpp" />
+    <ClCompile Include="BoidAlignSteering.cpp" />
     <ClCompile Include="BlendedSteering.cpp" />
+    <ClCompile Include="CohesionSteering.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="DebugSystem.cpp" />
@@ -86,6 +96,7 @@
     <ClCompile Include="UiManager.cpp" />
     <ClCompile Include="UIText.cpp" />
     <ClCompile Include="UnitManager .cpp" />
+    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="WanderAndFleeComponent.cpp" />
     <ClCompile Include="WanderAndSeekComponent.cpp" />
   </ItemGroup>

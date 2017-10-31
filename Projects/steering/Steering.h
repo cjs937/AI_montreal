@@ -23,7 +23,7 @@ public:
 	//constructors and destructors
 	Steering( const Vector2D& theLinear = gZeroVector2D, float theAngular = 0.0f, bool applyDirectly = false ):mLinear(theLinear),mAngular(theAngular) {};
 	Steering( const Steering& rhs ):mLinear(rhs.mLinear), mAngular(rhs.mAngular), mApplyDirectly(rhs.mApplyDirectly){};
-	~Steering(){};
+	virtual ~Steering(){};
 
 	//accessors
 	const Vector2D& getLinear() const { return mLinear; };
