@@ -115,6 +115,9 @@
     <ClCompile Include="AddBoidsMessage.cpp">
       <Filter>Source Files\Messaging</Filter>
     </ClCompile>
+    <ClCompile Include="OvalTerrain.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsBuffer.h">
@@ -260,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="MessageIncludes.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="OvalTerrain.h">
+      <Filter>Header Files\Units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

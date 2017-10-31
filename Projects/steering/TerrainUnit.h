@@ -15,7 +15,7 @@ public:
 	inline Vector2D getPosition() { return mPosition; };
 	void update(float _dt);
 	void draw(GraphicsBuffer* _buffer);
-	Vector2D* getAllPoints();
+	virtual Vector2D* getAllPoints();
 private:
 	Sprite* mpSprite;
 	Vector2D mPosition;

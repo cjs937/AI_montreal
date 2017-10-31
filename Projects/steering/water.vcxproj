@@ -41,6 +41,7 @@
     <ClInclude Include="KinematicUnit.h" />
     <ClInclude Include="KinematicWanderSteering.h" />
     <ClInclude Include="MessageIncludes.h" />
+    <ClInclude Include="OvalTerrain.h" />
     <ClInclude Include="PlayerMoveToMessage.h" />
     <ClInclude Include="QuitGameMessage.h" />
     <ClInclude Include="Ray.h" />
@@ -86,6 +87,7 @@
     <ClCompile Include="KinematicUnit.cpp" />
     <ClCompile Include="KinematicWanderSteering.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OvalTerrain.cpp" />
     <ClCompile Include="PlayerMoveToMessage.cpp" />
     <ClCompile Include="RemoveRandUnitMessage.cpp" />
     <ClCompile Include="SeparationSteering.cpp" />
