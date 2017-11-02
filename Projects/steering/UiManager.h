@@ -28,7 +28,7 @@ public:
 	inline ALLEGRO_FONT* getDefaultFont() const { return mpDefaultFont; };
 
 	void update(float _dt);
-	UIObject* addObject(UIType _type, Vector2D _position, int _alignmentFlags, bool _isActive = true);
+	UIObject* addObject(UIType _type, Vector2D _position, int _alignmentFlags, bool _isActive = true, bool _isRedText = false/*i'm so sorry*/);
 	bool removeObject(int _ID);
 
 };

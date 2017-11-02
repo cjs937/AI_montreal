@@ -33,7 +33,9 @@ const float DEFAULT_MAX_ROTATION = 100.0f;//0.5f;
 const float DEFAULT_SEPARATION_THRESHOLD = 40.0f;
 const float DEFAULT_SEPARATION_DECAY = 10.0f;
 const float DEFAULT_NEIGHBOR_RADIUS = 100.0f;
-
+const float DEFAULT_COHESION_WEIGHT = 1.0f;
+const float DEFAULT_SEPARATION_WEIGHT = 1.0f;
+const float DEFAULT_ALIGN_WEIGHT = 1.0f;
 
 class Component;
 class TerrainUnit;
@@ -56,6 +58,9 @@ private:
 	float mUnitSeparationThreshold;
 	float mUnitSeparationDecay;
 	float mBoidNeighborRadius;
+	float mCohesionWeight;
+	float mSeparationWeight;
+	float mAlignWeight;
 
 public:
 	UnitManager();
@@ -78,6 +83,14 @@ public:
 	float getMaxVelocity() { return mUnitMaxVelocity; };
 	float getMaxRotation() { return mUnitMaxRotationVelocity; };
 	float getNeighborRadius() { return mBoidNeighborRadius; };
+	float getCohesionWeight() { return mCohesionWeight; };
+	float getSeparationWeight() { return mSeparationWeight; };
+	float getAlignWeight() { return mAlignWeight; };
+
+	void increaseCohesionWeight(float _increaseBy) { mCohesionWeight += _increaseBy; };
+	void increaseSeparationWeight(float _increaseBy) { mSeparationWeight += _increaseBy; };
+	void increaseAlignmentWeight(float _increaseBy) { mAlignWeight += _increaseBy; };
+
 	void  spawnCircle(Vector2D _position);
 	//bool tagExists(int _ID);
 };

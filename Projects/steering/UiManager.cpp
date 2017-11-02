@@ -46,7 +46,7 @@ void UIManager::update(float _dt)
 	}
 }
 
-UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentFlags, bool _isActive)
+UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentFlags, bool _isActive, bool _isRedText)
 {
 	int newID = mAvailalbeIDs.top();
 
@@ -61,7 +61,9 @@ UIObject* UIManager::addObject(UIType _type, Vector2D _position, int _alignmentF
 	{
 		case TEXT:
 		{
-			newObj = new UIText(newID, _position, mpDefaultFont, new Color(WHITE), static_cast<int>(ALLEGRO_ALIGN_LEFT), "", _isActive);
+			Color* textColor = _isRedText ? new Color(RED) : new Color(WHITE);
+
+			newObj = new UIText(newID, _position, mpDefaultFont, textColor, static_cast<int>(ALLEGRO_ALIGN_LEFT), "", _isActive);
 			break;
 		}
 		default:

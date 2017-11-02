@@ -5,7 +5,8 @@
 enum DefaultColor
 {
 	BLACK,
-	WHITE
+	WHITE,
+	RED
 };
 
 struct Color : public Trackable

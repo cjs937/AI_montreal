@@ -5,3 +5,5 @@
 #include "AddUnitMessage.h"
 #include "RemoveRandUnitMessage.h"
 #include "QuitGameMessage.h"
+#include "IncreaseDebugValueMessage.h"
+#include "SetDebugModeMessage.h"

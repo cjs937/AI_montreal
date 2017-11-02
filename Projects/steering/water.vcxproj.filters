@@ -85,9 +85,6 @@
     <ClCompile Include="Color.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="DebugSystem.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
     <ClCompile Include="TerrainUnit.cpp">
       <Filter>Source Files\Units</Filter>
     </ClCompile>
@@ -120,6 +117,21 @@
     </ClCompile>
     <ClCompile Include="CollisionSteering.cpp">
       <Filter>Source Files\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugSystem.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="BoidsDebugObject.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ValueDebugger.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="IncreaseDebugValueMessage.cpp">
+      <Filter>Source Files\Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="SetDebugModeMessage.cpp">
+      <Filter>Source Files\Messaging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +228,6 @@
     <ClInclude Include="Color.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="DebugSystem.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
     <ClInclude Include="ToggleDebugMessage.h">
       <Filter>Header Files\Messaging</Filter>
     </ClInclude>
@@ -272,6 +281,24 @@
     </ClInclude>
     <ClInclude Include="CollisionSteering.h">
       <Filter>Header Files\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugSystem.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugObject.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="BoidsDebugObject.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueDebugger.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IncreaseDebugValueMessage.h">
+      <Filter>Header Files\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="SetDebugModeMessage.h">
+      <Filter>Header Files\Messaging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +355,12 @@
     </Filter>
     <Filter Include="Source Files\Collisions">
       <UniqueIdentifier>{4b9ca4ea-d503-4c52-a044-cbf70f61ec1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Debug">
+      <UniqueIdentifier>{c273a3b3-a97f-4966-8a08-4c5b08406057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Debug">
+      <UniqueIdentifier>{df49037a-665f-4456-a822-835512127473}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

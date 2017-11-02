@@ -16,6 +16,7 @@
     <ClInclude Include="Boid.h" />
     <ClInclude Include="BoidAlignSteering.h" />
     <ClInclude Include="BlendedSteering.h" />
+    <ClInclude Include="BoidsDebugObject.h" />
     <ClInclude Include="ChangeAngularVelocityMessage.h" />
     <ClInclude Include="ChangeReactionRadiusMessage.h" />
     <ClInclude Include="ChangeVelocityMessage.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="DebugObject.h" />
     <ClInclude Include="DebugSystem.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DynamicArriveSteering.h" />
@@ -34,6 +36,7 @@
     <ClInclude Include="GraphicsBuffer.h" />
     <ClInclude Include="GraphicsBufferManager.h" />
     <ClInclude Include="GraphicsSystem.h" />
+    <ClInclude Include="IncreaseDebugValueMessage.h" />
     <ClInclude Include="InputMessage.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="Kinematic.h" />
@@ -48,6 +51,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RemoveRandUnitMessage.h" />
     <ClInclude Include="SeparationSteering.h" />
+    <ClInclude Include="SetDebugModeMessage.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Steering.h" />
@@ -59,6 +63,7 @@
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="UpdateDebugMessage.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="ValueDebugger.h" />
     <ClInclude Include="WanderAndFleeComponent.h" />
     <ClInclude Include="WanderAndSeekComponent.h" />
   </ItemGroup>
@@ -68,6 +73,7 @@
     <ClCompile Include="Boid.cpp" />
     <ClCompile Include="BoidAlignSteering.cpp" />
     <ClCompile Include="BlendedSteering.cpp" />
+    <ClCompile Include="BoidsDebugObject.cpp" />
     <ClCompile Include="CohesionSteering.cpp" />
     <ClCompile Include="CollisionSteering.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -81,6 +87,7 @@
     <ClCompile Include="GraphicsBuffer.cpp" />
     <ClCompile Include="GraphicsBufferManager.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
+    <ClCompile Include="IncreaseDebugValueMessage.cpp" />
     <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="Kinematic.cpp" />
@@ -93,6 +100,7 @@
     <ClCompile Include="PlayerMoveToMessage.cpp" />
     <ClCompile Include="RemoveRandUnitMessage.cpp" />
     <ClCompile Include="SeparationSteering.cpp" />
+    <ClCompile Include="SetDebugModeMessage.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Steering.cpp" />
@@ -101,6 +109,7 @@
     <ClCompile Include="UIText.cpp" />
     <ClCompile Include="UnitManager .cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="ValueDebugger.cpp" />
     <ClCompile Include="WanderAndFleeComponent.cpp" />
     <ClCompile Include="WanderAndSeekComponent.cpp" />
   </ItemGroup>

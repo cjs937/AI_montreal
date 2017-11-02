@@ -246,14 +246,11 @@ RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA,
 }
 
 
-/*https://math.stackexchange.com/questions/275529/check-if-line-intersects-with-circles-perimeter*/
+/*https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm*/
 RayCollision* CollisionSystem::rayIntersectsEllipse(Ray* _ray, Vector2D _center, float _radius)
 {
 	//Ray = p + tr
 
-	//convert center to local (0,0)
-	Vector2D local_p = Vector2D(_ray->getSourcePoint().getX() - _center.getX(), _ray->getSourcePoint().getY() - _center.getY());
-	Vector2D local_r = Vector2D(_ray->getDirection().getX() - _center.getX(), _ray->getDirection().getY() - _center.getY());
 	Vector2D center_to_ray = _ray->getSourcePoint() - _center;
 
 	//Quadratic formula to check for and find point of collision 

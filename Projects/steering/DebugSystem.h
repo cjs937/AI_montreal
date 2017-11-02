@@ -40,6 +40,7 @@ public:
 	void update(float _dt);
 	void changeDebugText(std::string _newText);
 	void toggleActivation();
+	void increaseCurrentValue(float _increaseBy);
 
 private:
 	DebugMode mCurrentMode;
@@ -48,11 +49,12 @@ private:
 	int mCurrentValue;
 	int mNumValues;
 	UIText* mUIText;
+	UIText* mUISelectedText;
 
-	void DebugVelocityControl();
-	void DebugReactionRadius();
-	void DebugAngularVelocity();
-	void DebugCohesion();
-	void DebugSeparation();
-	void DebugAlignment();
+	//void DebugVelocityControl();
+	//void DebugReactionRadius();
+	//void DebugAngularVelocity();
+	//void DebugCohesion();
+	//void DebugSeparation();
+	//void DebugAlignment();
 };

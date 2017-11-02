@@ -150,7 +150,7 @@ bool Game::init()
 	//setup units
 
 	mpUnitManager->generateBorderWall(GRAPHICS_SYSTEM->getWidth(), GRAPHICS_SYSTEM->getHeight());
-	//mpUnitManager->spawnCircle(Utility::getScreenCenter());
+	mpUnitManager->spawnCircle(Utility::getScreenCenter());
 
 	Vector2D pos( 500.0f, 200.0f );
 	Vector2D vel( 0.0f, 0.0f );
