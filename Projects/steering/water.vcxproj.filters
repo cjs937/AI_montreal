@@ -115,8 +115,11 @@
     <ClCompile Include="AddBoidsMessage.cpp">
       <Filter>Source Files\Messaging</Filter>
     </ClCompile>
-    <ClCompile Include="OvalTerrain.cpp">
+    <ClCompile Include="EllipseTerrain.cpp">
       <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSteering.cpp">
+      <Filter>Source Files\Steering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -264,8 +267,11 @@
     <ClInclude Include="MessageIncludes.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="OvalTerrain.h">
+    <ClInclude Include="EllipseTerrain.h">
       <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSteering.h">
+      <Filter>Header Files\Steering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

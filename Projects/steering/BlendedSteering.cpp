@@ -1,9 +1,14 @@
 #include "BlendedSteering.h"
 #include "Game.h"
 #include "UnitManager.h"
+#include "CollisionSteering.h"
 
-BlendedSteering::BlendedSteering()
-{}
+BlendedSteering::BlendedSteering(KinematicUnit* _unit)
+{
+	BlendedSteeringBehavior* collisionBehavior = new BlendedSteeringBehavior(new CollisionSteering(_unit), 3.0f);
+
+	mBehaviors.push_back(collisionBehavior);
+}
 
 BlendedSteering::~BlendedSteering()
 {

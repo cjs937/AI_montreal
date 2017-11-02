@@ -24,6 +24,7 @@
 #include "UnitManager.h"
 #include "UiManager.h"
 #include "DebugSystem.h"
+#include "Utility.h"
 
 Game* gpGame = NULL;
 
@@ -149,10 +150,22 @@ bool Game::init()
 	//setup units
 
 	mpUnitManager->generateBorderWall(GRAPHICS_SYSTEM->getWidth(), GRAPHICS_SYSTEM->getHeight());
+	//mpUnitManager->spawnCircle(Utility::getScreenCenter());
+
 	Vector2D pos( 500.0f, 200.0f );
 	Vector2D vel( 0.0f, 0.0f );
 
 	mpUnitManager->addUnit(PLAYER, pos, 1, vel, 0.0f, 200.0f, 10.0f );
+
+
+	//Collision avoidance unit test
+	//float dist = 200;
+
+	//KinematicUnit* boi = mpUnitManager->addUnit(AI, Utility::getScreenCenter() + Vector2D(dist, 0), 1, vel, 0.0f, 100.0f, 20.0f);
+	//boi->seek(Utility::getScreenCenter());
+
+	//boi = mpUnitManager->addUnit(AI, Utility::getScreenCenter() - Vector2D(dist, 0), 1, vel, 0.0f, 100.0f, 20.0f);
+	//boi->seek(Utility::getScreenCenter());
 
 	return true;
 }

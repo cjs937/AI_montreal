@@ -14,6 +14,8 @@ enum DebugMode
 	NUM_MODES
 };
 
+class UIText;
+
 struct DebugTextObject
 {
 	DebugMode mode;
@@ -23,15 +25,13 @@ struct DebugTextObject
 	//DebugTextObject(DebugMode _mode, std::string _sampleText, )
 };
 
-class UIText;
-
 class DebugSystem : public Trackable
 {
 public:
 
 	DebugSystem();
 	~DebugSystem();
-
+	 
 	//inline UIText* getDebugText() { return mUIText; };
 	inline DebugMode getCurrentMode() { return mCurrentMode; };
 	inline bool isActive() { return mIsActive; };
@@ -47,6 +47,7 @@ private:
 	std::map<DebugMode, UIText*> mDebugText;
 	int mCurrentValue;
 	int mNumValues;
+	UIText* mUIText;
 
 	void DebugVelocityControl();
 	void DebugReactionRadius();

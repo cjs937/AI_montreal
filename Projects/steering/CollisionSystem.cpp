@@ -9,6 +9,7 @@
 #include "Ray.h"
 #include "Utility.h"
 #include "KinematicSeekSteering.h"
+#include "EllipseTerrain.h"
 
 Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _steering)
 {
@@ -34,8 +35,17 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 
 		delete toReturn;
 
+		std::cout << "Hit\n";
+
 		return _steering;
 	}
+
+	//Early return to skip collision avoidance code since it doesn't work :( //////
+
+	_steering = &gNullSteering;
+
+	return _steering;
+	////////////////////////////////////////////////////////////////////////////
 
 	float shortestTime = INFINITY;
 
@@ -54,7 +64,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 		{
 			currentTarget = currentUnit->second;
 
-			if (currentTarget->getID() == _unit->getID() || currentTarget->getID() == 0)
+			if (currentTarget->getID() == _unit->getID())// || currentTarget->getID() == 0)
 				continue;
 
 			Vector2D currentRelativePosition = currentTarget->getPosition() - _unit->getPosition();//Vector2D(_unitA->getPosition().getX() - _unitB->getPosition().getX(), _unitA->getPosition().getY() - _unitB->getPosition().getY());
@@ -66,10 +76,10 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 
 			float collisionTime = Utility::dotProduct(currentRelativePosition, currentRelativeVelocity) / (relativeSpeed * relativeSpeed);
 
-			float currentDistance = relativePosition.getLengthSquared();//magnitude(relativePosition);
+			float currentDistance = relativePosition.getLength();//magnitude(relativePosition);
 			float currentSeparation = currentDistance - relativeSpeed * collisionTime;
 
-			if (currentSeparation > 2 * UNIT_COLLISION_RADIUS)
+			if (currentSeparation > 2 * UNIT_COLLISION_RADIUS) //|| currentSeparation < 0)
 				continue;
 
 			if (0.0f < collisionTime && collisionTime < shortestTime)
@@ -86,8 +96,11 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 
 	if (target == NULL)
 	{
-		std::cout << "NONE\n";
-		return NULL;
+		//std::cout << "NONE\n";
+
+		_steering = &gNullSteering;
+
+		return _steering;
 	}
 
 	std::cout << _unit->getID() << " " << "collision with " << target->getID() << "\n";
@@ -104,7 +117,7 @@ Steering* CollisionSystem::checkUnitCollision(KinematicUnit* _unit, Steering* _s
 	}
 
 	newRelativePos.normalize();
-
+	 
 	_steering->setLinear( newRelativePos * -1.0f * _unit->getMaxAcceleration());
 	//_steering->setAngular(Kinematic::getOrientationFromVelocity(_unit->getOrientation(), _steering->getLinear()));
 
@@ -115,10 +128,18 @@ RayCollision* CollisionSystem::rayCast(KinematicUnit* _unit)
 {
 	std::vector<TerrainUnit*> terrainVector = gpGame->getUnitManager()->getTerrain();
 	RayCollision* collision = NULL;
+	TerrainUnit* currentTerrain = NULL;
 
 	for (int i = 0; i < terrainVector.size(); ++i)
 	{
-		collision = checkRayIntersection(_unit, terrainVector[i]);
+		currentTerrain = terrainVector[i];
+
+		if (currentTerrain->getType() == BOX)
+			collision = checkWallIntersection(_unit, terrainVector[i]);
+		else if (currentTerrain->getType() == ELLIPSE)
+			collision = checkEllipseIntersection(_unit, (EllipseTerrain*)terrainVector[i]);
+		else
+			collision = NULL;
 
 		if (collision != NULL)
 		{
@@ -129,7 +150,7 @@ RayCollision* CollisionSystem::rayCast(KinematicUnit* _unit)
 	return collision;
 }
 
-RayCollision* CollisionSystem::checkRayIntersection(KinematicUnit* _unit, TerrainUnit* _wall)
+RayCollision* CollisionSystem::checkWallIntersection(KinematicUnit* _unit, TerrainUnit* _wall)
 {
 	RayCollision* collision = NULL;
 	Vector2D* wallPoints = _wall->getAllPoints();
@@ -173,6 +194,24 @@ RayCollision* CollisionSystem::checkRayIntersection(KinematicUnit* _unit, Terrai
 
 }
 
+RayCollision* CollisionSystem::checkEllipseIntersection(KinematicUnit* _unit, EllipseTerrain* _ellipse)
+{
+	RayCollision* collision = NULL;
+	Ray* rayCast = new Ray(_unit->getPosition(), UNIT_RAYCAST_DISTANCE, _unit->getVelocity());
+
+	collision = rayIntersectsEllipse(rayCast, _ellipse->getPosition(), _ellipse->getRadius());
+
+	if (!collision->hit)
+	{
+		delete collision;
+
+		collision = NULL;
+	}
+
+	delete rayCast;
+
+	return collision;
+}
 /*https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect*/
 RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA, Vector2D _pointB)
 {
@@ -199,13 +238,49 @@ RayCollision* CollisionSystem::rayIntersectsSegment(Ray* _ray, Vector2D _pointA,
 		//hit if r x s != 0 && 0 <= t <= 1 && 0 <= t' <= 1
 		hit = (Utility::crossProduct(_ray->getDirection(), wall_d) != 0.0f && 0.0f <= t_ray && t_ray <= 1.0f && 0.0f <= t_wall && t_wall <= 1.0f);
 
-		collisionPoint = hit ? _ray->getSourcePoint() + (Vector2D(t_ray * _ray->getDirection().getX(), t_ray * _ray->getDirection().getY())) :
+		collisionPoint = hit ? _ray->getPointAlongRay(t_ray) :
 			Vector2D();
 	}
 
 	return new RayCollision(hit, collisionPoint);
 }
 
+
+/*https://math.stackexchange.com/questions/275529/check-if-line-intersects-with-circles-perimeter*/
+RayCollision* CollisionSystem::rayIntersectsEllipse(Ray* _ray, Vector2D _center, float _radius)
+{
+	//Ray = p + tr
+
+	//convert center to local (0,0)
+	Vector2D local_p = Vector2D(_ray->getSourcePoint().getX() - _center.getX(), _ray->getSourcePoint().getY() - _center.getY());
+	Vector2D local_r = Vector2D(_ray->getDirection().getX() - _center.getX(), _ray->getDirection().getY() - _center.getY());
+	Vector2D center_to_ray = _ray->getSourcePoint() - _center;
+
+	//Quadratic formula to check for and find point of collision 
+	//https://www.khanacademy.org/math/algebra/quadratics/solving-quadratics-using-the-quadratic-formula/a/discriminant-review//
+	
+	float a = Utility::dotProduct(_ray->getDirection(), _ray->getDirection());//Utility::square(local_r.getX() - local_p.getX()) + Utility::square(local_r.getY() - local_p.getY());
+	float b = 2 * Utility::dotProduct(center_to_ray, _ray->getDirection());//( ( local_p.getX() * ( local_r.getX() - local_p.getX() ) ) + ( local_p.getY() * (local_r.getY() - local_p.getY() ) ) );
+	float c = Utility::dotProduct(center_to_ray, center_to_ray) - Utility::square(_radius);//Utility::square(local_p.getX()) + Utility::square(local_p.getY()) - Utility::square(_radius);
+
+	float discriminant = Utility::square(b) - (4 * a * c);
+
+	if (discriminant < 0)
+		return new RayCollision(false, Vector2D());
+
+	discriminant = sqrt(discriminant);
+
+	float t1 = (-b + discriminant) / (2 * a);
+	float t2 = (-b - discriminant) / (2 * a);
+
+	bool hit = (0 <= t1 && t1 <= 1 || 0 <= t2 && t2 <= 1);
+
+	Vector2D collisionPoint = hit ? _ray->getPointAlongRay(t1) :
+		Vector2D();
+
+	return new RayCollision(hit, collisionPoint);
+
+}
 
 //Steering* CollisionSystem::checkWallCollision(KinematicUnit* _unit)
 //{

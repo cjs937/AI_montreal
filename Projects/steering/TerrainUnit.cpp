@@ -2,7 +2,7 @@
 #include "GraphicsBuffer.h"
 #include "Sprite.h"
 
-TerrainUnit::TerrainUnit(Sprite* _sprite, Vector2D _position):mpSprite(_sprite),mPosition(_position)
+TerrainUnit::TerrainUnit(Sprite* _sprite, Vector2D _position, TerrainType _type):mpSprite(_sprite),mPosition(_position), mTerrainType(_type)
 {}
 
 TerrainUnit::~TerrainUnit()
@@ -14,7 +14,6 @@ void TerrainUnit::update(float _dt)
 void TerrainUnit::draw(GraphicsBuffer* _buffer)
 {
 	mpSprite->draw(*_buffer, mPosition.getX(), mPosition.getY());
-
 }
 
 /* topLeft = 0, topRight, bottomLeft, bottomRight */

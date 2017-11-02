@@ -2,6 +2,8 @@
 #include "Steering.h"
 #include <vector>
 
+class KinematicUnit;
+
 struct BlendedSteeringBehavior
 {
 public:
@@ -27,7 +29,7 @@ private:
 
 public:
 
-	BlendedSteering();
+	BlendedSteering(KinematicUnit* _unit);
 	~BlendedSteering();
 
 	Steering* getSteering();

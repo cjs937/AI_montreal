@@ -9,7 +9,7 @@ Boid::Boid(int _ID, Sprite* pSprite, const Vector2D& position, float orientation
 	:KinematicUnit(_ID, pSprite, position, orientation, velocity, rotationVel, maxVelocity, maxAcceleration)
 
 {
-	BlendedSteering* steering = new BlendedSteering();
+	BlendedSteering* steering = new BlendedSteering(this);
 
 	steering->addBehavior(new BoidAlignSteering(this));
 	steering->addBehavior(new CohesionSteering(this));

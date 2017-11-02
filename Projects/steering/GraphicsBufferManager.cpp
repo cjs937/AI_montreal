@@ -44,6 +44,7 @@ IDType GraphicsBufferManager::loadBuffer( const IDType& id, const string& filena
 		else
 		{
 			delete pBuffer;
+			return INVALID_ID;
 		}
 	}
 	return id;

@@ -10,9 +10,7 @@ float Utility::crossProduct(Vector2D _vectorA, Vector2D _vectorB)
 
 float Utility::dotProduct(Vector2D _vectorA, Vector2D _vectorB)
 {
-	float toReturn = _vectorA.getX() * _vectorB.getX() + _vectorA.getY() * _vectorB.getY();
-
-	return toReturn;
+	return (_vectorA.getX() * _vectorB.getX()) + (_vectorA.getY() * _vectorB.getY());
 }
 
 float Utility::vectorDistance(Vector2D _vectorA, Vector2D _vectorB)
@@ -34,4 +32,9 @@ Vector2D Utility::getScreenCenter()
 	float halfY = gpGame->getGraphicsSystem()->getHeight() / 2;
 
 	return Vector2D(halfX, halfY);
+}
+
+float Utility::square(float _value)
+{
+	return _value * _value;
 }

@@ -10,12 +10,14 @@ enum UnitType
 	NONE = -1,
 
 	PLAYER,
+	AI,
 	ARRIVER,
 	SEEKER,
 	WANDERER,
 	WANDER_SEEK,
 	WANDER_FLEE,
 	WALL,
+	CIRCLE,
 	BOID,
 	NUM_TYPES
 };
@@ -41,13 +43,13 @@ class UnitManager : public Trackable
 private:
 	//map of unit maps
 	std::map<UnitType, std::map<int, KinematicUnit*>*> mMapList;
+	std::map<UnitType, IDType> mBufferIDs;
 	std::vector<TerrainUnit*> mTerrain;
 	std::stack<int> mAvailableIDs;
-	IDType mPlayerIconBufferID;
-	IDType mEnemyIconBufferID;
-	IDType mWallBufferID;
 
+	void initBuffersAndSprites();
 	Sprite* getUnitSprite(UnitType _unitType);
+	IDType getBufferID(UnitType _unitType);
 
 	float mUnitMaxVelocity;
 	float mUnitMaxRotationVelocity;
@@ -76,5 +78,6 @@ public:
 	float getMaxVelocity() { return mUnitMaxVelocity; };
 	float getMaxRotation() { return mUnitMaxRotationVelocity; };
 	float getNeighborRadius() { return mBoidNeighborRadius; };
+	void  spawnCircle(Vector2D _position);
 	//bool tagExists(int _ID);
 };

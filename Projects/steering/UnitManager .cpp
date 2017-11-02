@@ -10,9 +10,11 @@
 #include "TerrainUnit.h"
 #include "Vector2D.h"
 #include "Boid.h"
+#include "EllipseTerrain.h"
 
 typedef std::pair <UnitType, std::map<int, KinematicUnit*>*> mapListPair;
 typedef std::pair <int, KinematicUnit*> mapPair;
+typedef pair<UnitType, IDType> IDPair;
 
 UnitManager::UnitManager()
 {
@@ -23,33 +25,53 @@ UnitManager::UnitManager()
 	mUnitSeparationDecay = DEFAULT_SEPARATION_DECAY;
 	mBoidNeighborRadius = DEFAULT_NEIGHBOR_RADIUS;
 
-	mPlayerIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp");
-	mEnemyIconBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp");
-	mWallBufferID = gpGame->getGraphicsBufferManager()->loadBuffer("wall.bmp");
+	initBuffersAndSprites();
 
-	GraphicsBuffer* pPlayerBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mPlayerIconBufferID);
-	Sprite* pArrowSprite = NULL;
+	//first unit id will be 0
+	mAvailableIDs.push(0);
+}
+
+void UnitManager::initBuffersAndSprites()
+{
+	mBufferIDs.insert(IDPair(PLAYER, gpGame->getGraphicsBufferManager()->loadBuffer("arrow.bmp")));
+	mBufferIDs.insert(IDPair(AI, gpGame->getGraphicsBufferManager()->loadBuffer("enemy-arrow.bmp")));
+	mBufferIDs.insert(IDPair(WALL, gpGame->getGraphicsBufferManager()->loadBuffer("wall.bmp")));
+	mBufferIDs.insert(IDPair(CIRCLE, gpGame->getGraphicsBufferManager()->loadBuffer("circle.bmp")));
+
+
+	GraphicsBuffer* pPlayerBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(PLAYER));
 	if (pPlayerBuffer != NULL)
 	{
-		pArrowSprite = gpGame->getSpriteManager()->createAndManageSprite(PLAYER_ICON_SPRITE_ID, pPlayerBuffer, 0, 0, pPlayerBuffer->getWidth(), pPlayerBuffer->getHeight());
-	}
-	GraphicsBuffer* pAIBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mEnemyIconBufferID);
-	Sprite* pEnemyArrow = NULL;
-	if (pAIBuffer != NULL)
-	{
-		pEnemyArrow = gpGame->getSpriteManager()->createAndManageSprite(AI_ICON_SPRITE_ID, pAIBuffer, 0, 0, pAIBuffer->getWidth(), pAIBuffer->getHeight());
+		gpGame->getSpriteManager()->createAndManageSprite(PLAYER_ICON_SPRITE_ID, pPlayerBuffer, 0, 0, pPlayerBuffer->getWidth(), pPlayerBuffer->getHeight());
 	}
 
-	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mWallBufferID);
-	Sprite* wall = NULL;
+	GraphicsBuffer* pAIBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(AI));
+	if (pAIBuffer != NULL)
+	{
+		gpGame->getSpriteManager()->createAndManageSprite(AI_ICON_SPRITE_ID, pAIBuffer, 0, 0, pAIBuffer->getWidth(), pAIBuffer->getHeight());
+	}
+
+	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(WALL));
 	if (wallBuffer != NULL)
 	{
 		gpGame->getSpriteManager()->createAndManageSprite(WALL_SPRITE_ID, wallBuffer, 0, 0, wallBuffer->getWidth(), wallBuffer->getHeight());
 	}
 
-	//first unit id will be 0
-	mAvailableIDs.push(0);
+	GraphicsBuffer* circleBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(CIRCLE));
+	if (circleBuffer != NULL)
+	{
+		gpGame->getSpriteManager()->createAndManageSprite(CIRCLE_SPRITE_ID, wallBuffer, 0, 0, circleBuffer->getWidth(), circleBuffer->getHeight());
+	}
 }
+
+IDType UnitManager::getBufferID(UnitType _unitType)
+{
+	if (mBufferIDs.find(_unitType) == mBufferIDs.end())
+		return INVALID_ID;
+
+	return mBufferIDs[_unitType];
+}
+
 
 UnitManager::~UnitManager()
 {
@@ -193,6 +215,10 @@ Sprite* UnitManager::getUnitSprite(UnitType _unitType)
 	{
 		spriteID = WALL_SPRITE_ID;
 	}
+	else if (_unitType == CIRCLE)
+	{
+		spriteID = CIRCLE_SPRITE_ID;
+	}
 	else
 	{
 		spriteID = AI_ICON_SPRITE_ID;
@@ -321,9 +347,19 @@ Component* UnitManager::addComponent(ComponentType _type, KinematicUnit* _unit)
 	return newComponent;
 }
 
+void UnitManager::spawnCircle(Vector2D _position)
+{
+	GraphicsBuffer* circleBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(CIRCLE));
+	float radius = circleBuffer->getWidth() / 2;
+
+	TerrainUnit* circle = new EllipseTerrain(getUnitSprite(CIRCLE), _position, radius);
+
+	mTerrain.push_back(circle);
+}
+
 void UnitManager::generateBorderWall(int _width, int _height)
 {
-	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(mWallBufferID);
+	GraphicsBuffer* wallBuffer = gpGame->getGraphicsBufferManager()->getBuffer(getBufferID(WALL));
 	int wallWidth = wallBuffer->getWidth();// / 2;
 	int wallHeight = wallBuffer->getHeight();// / 2;
 	float currentWidth = 0;//wallWidth / 2;

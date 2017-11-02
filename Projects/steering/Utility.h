@@ -9,6 +9,7 @@ public:
 	static float crossProduct(Vector2D _vectorA, Vector2D _vectorB);
 	static float vectorDistance(Vector2D _vectorA, Vector2D _vectorB);
 	static Vector2D getScreenCenter();
+	static float square(float _value);
 
 private:
 	Utility() {};
