@@ -56,10 +56,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>CommonPathfindingLib.lib;allegro-5.0.10-monolith-md-debug.lib;DeanLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CommonPathfindingLib.lib;allegro-5.0.10-monolith-md.lib;DeanLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>false</MapExports>
-      <AdditionalLibraryDirectories>..\CommonPathfindingLib\Debug;..\..\..\..\External libs\Allegro5\lib;..\..\..\..\DeanLib\debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\CommonPathfindingLib\Debug;..\..\..\..\External libs\Allegro5\lib;..\..\..\..\DeanLib\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -60,8 +60,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>CommonPathfindingLib.lib;allegro-5.0.10-monolith-md-debug.lib;DeanLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\CommonPathfindingLib\Debug;..\..\..\..\External libs\Allegro5\lib;..\..\..\..\DeanLib\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>CommonPathfindingLib.lib;allegro-5.0.10-monolith-md.lib;DeanLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\CommonPathfindingLib\Debug;..\..\..\..\External libs\Allegro5\lib;..\..\..\..\DeanLib\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,6 +83,7 @@
     <ClInclude Include="DebugContent.h" />
     <ClInclude Include="DebugDisplay.h" />
     <ClInclude Include="DepthFirstPathfinder.h" />
+    <ClInclude Include="DijkstraPathfinder.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameMessage.h" />
     <ClInclude Include="GameMessageManager.h" />
@@ -99,6 +100,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="DebugDisplay.cpp" />
     <ClCompile Include="DepthFirstPathfinder.cpp" />
+    <ClCompile Include="DijkstraPathfinder.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameMessage.cpp" />
     <ClCompile Include="GameMessageManager.cpp" />
