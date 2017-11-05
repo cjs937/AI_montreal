@@ -67,34 +67,55 @@ Vector2D Grid::getULCornerOfSquare( int index ) const
 }
 
 //get adjacent grid square indices
-std::vector<int> Grid::getAdjacentIndices( int theSquareIndex ) const
+std::vector<int> Grid::getAdjacentIndices(int theSquareIndex, bool _getDiags) const
 {
 	std::vector<int> indices;
 
-	static const int NUM_DIRS = 8;
-	//						        N  NE	E  SE	S	SW	 W	NW
-	static int xMods[NUM_DIRS] = {	0,	1,	1,	1,	0,	-1,	-1,	-1 };
-	static int yMods[NUM_DIRS] = { -1, -1,	0,	1,	1,	 1,	 0,	-1 };
+	static const int NUM_DIRS = _getDiags ? 8 : 4;
+
+	int* xMods;
+	int* yMods;
+
+	if (_getDiags)				// N  NE E  SE	S	SW	W  NW
+		xMods = new int[NUM_DIRS] { 0, 1, 1, 1, 0, -1, -1, -1 };
+	else
+	{
+								// N  E   S   W
+		xMods = new int[NUM_DIRS] {0, 1, 0, -1};
+	}
+
+	if(_getDiags)
+	{
+		yMods = new int[NUM_DIRS] {-1, -1, 0, 1, 1, 1, 0, -1 };
+	}
+	else
+	{
+		yMods = new int[NUM_DIRS] {-1, 0, 1, 0 };
+	}
 
 	//find the x,y of the passed in index
 	int x = theSquareIndex % mGridWidth;
 	int y = theSquareIndex / mGridWidth;
 
-	for( int i=0; i<NUM_DIRS; i++ )
+	for (int i = 0; i < NUM_DIRS; i++)
 	{
 		//calc adjacent x,y
 		int adjX = x + xMods[i];
 		int adjY = y + yMods[i];
 
 		//convert back to an index if on the Grid
-		if( adjX >= 0 && adjX < mGridWidth && adjY >=0 && adjY < mGridHeight )
+		if (adjX >= 0 && adjX < mGridWidth && adjY >= 0 && adjY < mGridHeight)
 		{
-			int adjIndex = ( adjY * mGridWidth ) + adjX;
+			int adjIndex = (adjY * mGridWidth) + adjX;
 
 			//add to vector of indices
-			indices.push_back( adjIndex );
+			indices.push_back(adjIndex);
 		}
 	}
+
+	delete[] yMods;
+	delete[] xMods;
+	 
 	return indices;
 }
 

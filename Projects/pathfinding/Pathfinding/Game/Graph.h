@@ -16,6 +16,7 @@ public:
 	virtual void init();
 	std::vector<Connection*> getConnections( const Node& from );
 	std::vector<Connection*> getConnections( const NODE_ID& fromId );
+	//std::vector<Connection*> getNonDiagonalConnections(const Node& from);
 	Node* getNode( int index );
 
 protected:

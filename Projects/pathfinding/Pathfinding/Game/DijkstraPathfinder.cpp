@@ -13,57 +13,91 @@ DijkstraPathfinder::~DijkstraPathfinder()
 
 const Path& DijkstraPathfinder::findPath(Node* pFrom, Node* pTo)
 {
-	std::priority_queue<DijkstraNode*> openList;
+	std::priority_queue<DijkstraNode> openList;
 	std::vector<Node*> closedList;
-	std::vector<Node*> tempPath;
 
 	//initialization
 	mPath.clear();
 	mVisitedNodes.clear();
 
+	openList.push(DijkstraNode(pFrom, NULL, 0.0f));
 
-	openList.push(new DijkstraNode(pFrom, NULL, 0.0f));
+	DijkstraNode currentNode = openList.top();
+	bool here = false;
 
-	DijkstraNode* currentNode = openList.top();
-
-	while (currentNode->node != pTo && openList.size() > 0)
+	while (currentNode.node != pTo && openList.size() > 0)
 	{
-		openList.pop();
+		std::vector<Connection*> connections = mpGraph->getConnections(*currentNode.node);
 
-		std::vector<Connection*> connections = mpGraph->getConnections(*currentNode->node);
-
-		for (int i = 0; i < connections.size(); ++i)
+		for (size_t i = 0; i < connections.size(); ++i)
 		{
+			DijkstraNode tempNode;
 			Node* connectionNode = connections[i]->getToNode();
+			float newCost = currentNode.cost + connections[i]->getCost();
 
-			// if node isn't already in closed list
-			if (std::find(closedList.begin(), closedList.end(), connectionNode) == closedList.end())
+			// if node is in closed list
+			if (std::find(closedList.begin(), closedList.end(), connectionNode) != closedList.end())
 			{
-				float newCost = currentNode->cost + connections[i]->getCost();
-
-				DijkstraNode* newNode = new DijkstraNode(connectionNode, currentNode, newCost);
-
-				openList.push(newNode);
+				continue;
 			}
+			// if node is in open list
+			else if ((tempNode = getNodeInOpenList(connectionNode, openList)).node != NULL) 
+			{
+				if (tempNode.cost <= newCost)
+				{
+					continue;
+				}
+
+				tempNode.connection = new DijkstraNode(&currentNode);
+				tempNode.cost = newCost;
+
+				continue;
+			}
+
+			// if node is unvisited
+			tempNode = DijkstraNode(connectionNode, new DijkstraNode(&currentNode), newCost);
+
+			openList.push(tempNode);
 		}
 
-		closedList.push_back(currentNode->node);
+		closedList.push_back(currentNode.node);
 
+		openList.pop();
 		currentNode = openList.top();
+
+	}
+
+	if (currentNode.node != pTo)
+	{
+		return mPath;
 	}
 
 	//generates a temporary path going from goal to start
-	DijkstraNode* previousNode = currentNode;
+	std::vector<Node*> tempPath;
 
-	while (currentNode != NULL)
+	DijkstraNode* toAdd = new DijkstraNode(&currentNode);
+	DijkstraNode* prevNode = NULL;
+
+	while (true)
 	{
-		tempPath.push_back(currentNode->node);
+		tempPath.push_back(toAdd->node);
 
-		previousNode = currentNode;
+		//if this is start node
+		if (toAdd->connection == NULL)
+		{
+			delete toAdd;
 
-		currentNode = currentNode->connection;
+			break;
+		}
 
-		delete previousNode;
+		prevNode = toAdd;
+
+		toAdd = toAdd->connection;
+
+		delete prevNode;
+
+		prevNode = toAdd;
+
 	}
 
 	//reverses path so the start is the first node
@@ -74,16 +108,22 @@ const Path& DijkstraPathfinder::findPath(Node* pFrom, Node* pTo)
 		mVisitedNodes.push_back(tempPath[i]);
 	}
 
-	//clears out any remaining nodes in open list
-	//while(openList.size() > 0)
-	//{
-	//	currentNode = openList.top();
-
-	//	delete currentNode;
-
-	//	openList.pop();
-	//}
-
-
 	return mPath;
+}
+
+DijkstraPathfinder::DijkstraNode DijkstraPathfinder::getNodeInOpenList(Node* _node, std::priority_queue<DijkstraNode> _openList)
+{
+	DijkstraNode currentNode;
+
+	while (_openList.size() > 0)
+	{
+		currentNode = _openList.top();
+
+		if (currentNode.node == _node)
+			return currentNode;
+
+		_openList.pop();
+	}
+
+	return DijkstraNode();
 }

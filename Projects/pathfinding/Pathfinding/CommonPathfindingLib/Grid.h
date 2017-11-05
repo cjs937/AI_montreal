@@ -31,7 +31,7 @@ public:
 	int getSquareSize() const { return mSquareSize; };
 
 	//get adjacent grid square indices
-	std::vector<int> getAdjacentIndices( int theSquareIndex ) const;
+	std::vector<int> getAdjacentIndices( int theSquareIndex, bool _getDiags = false) const;
 
 	void save( std::ofstream& file );
 	void load( std::ifstream& file );
