@@ -5,7 +5,7 @@
 #include "GridGraph.h"
 #include "Connection.h"
 
-DijkstraPathfinder::DijkstraPathfinder(GridGraph* pGraph):GridPathfinder(pGraph)
+DijkstraPathfinder::DijkstraPathfinder(GridGraph* pGraph):GridPathfinder(pGraph, Color(RED))
 {}
 
 DijkstraPathfinder::~DijkstraPathfinder()
@@ -16,11 +16,7 @@ const Path& DijkstraPathfinder::findPath(Node* pFrom, Node* pTo)
 	std::priority_queue<DijkstraNode> openList;
 	std::vector<Node*> closedList;
 
-	//initialization
-	mPath.clear();
-	mVisitedNodes.clear();
-
-	openList.push(DijkstraNode(pFrom, NULL, 0.0f));
+	openList.push(DijkstraNode(pFrom));
 
 	DijkstraNode currentNode = openList.top();
 	bool here = false;
@@ -67,10 +63,16 @@ const Path& DijkstraPathfinder::findPath(Node* pFrom, Node* pTo)
 
 	}
 
+	//No path was found
 	if (currentNode.node != pTo)
 	{
+		std::cout << "No path was found.\n";
 		return mPath;
 	}
+
+	//clear path
+	mPath.clear();
+	mVisitedNodes.clear();
 
 	//generates a temporary path going from goal to start
 	std::vector<Node*> tempPath;
@@ -126,4 +128,30 @@ DijkstraPathfinder::DijkstraNode DijkstraPathfinder::getNodeInOpenList(Node* _no
 	}
 
 	return DijkstraNode();
+}
+
+DijkstraPathfinder::DijkstraNode::DijkstraNode()
+{
+	node = NULL;
+	connection = NULL;
+	cost = 0;
+}
+
+DijkstraPathfinder::DijkstraNode::DijkstraNode(DijkstraNode* _copy)
+{
+	node = _copy->node;
+	connection = _copy->connection;
+	cost = _copy->cost;
+}
+
+DijkstraPathfinder::DijkstraNode::DijkstraNode(Node* _node, DijkstraNode* _connection, float _weight) : node(_node), connection(_connection), cost(_weight)
+{};
+
+DijkstraPathfinder::DijkstraNode::~DijkstraNode()
+{
+};
+
+bool DijkstraPathfinder::DijkstraNode::operator<(const DijkstraNode &_toCompare) const
+{
+	return  _toCompare.cost < cost;
 }

@@ -11,31 +11,15 @@ class DijkstraPathfinder : public GridPathfinder
 	struct DijkstraNode : public Trackable
 	{
 		public:
-			DijkstraNode()
-			{
-				node = NULL;
-				connection = NULL;
-				cost = 0;
-			}
+			DijkstraNode();
 
-			DijkstraNode(DijkstraNode* _copy)
-			{
-				node = _copy->node;
-				connection = _copy->connection;
-				cost = _copy->cost;
-			}
+			DijkstraNode(DijkstraNode* _copy);
 
-			DijkstraNode(Node* _node, DijkstraNode* _connection, float _weight) : node(_node), connection(_connection), cost(_weight)
-			{};
+			DijkstraNode(Node* _node, DijkstraNode* _connection = NULL, float _weight = 0.0f);
 
-			~DijkstraNode() 
-			{
-			};
+			~DijkstraNode();
 
-			bool operator<(const DijkstraNode &_toCompare) const
-			{
-				return  _toCompare.cost < cost;
-			}
+			bool operator<(const DijkstraNode &_toCompare) const;
 
 			Node* node;
 			DijkstraNode* connection;
@@ -47,6 +31,8 @@ public:
 	~DijkstraPathfinder();
 
 	const Path& findPath(Node* pFrom, Node* pTo);
+
+	PathfinderType getType() { return DIJKSTRA; };
 
 private:
 

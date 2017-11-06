@@ -6,8 +6,8 @@
 #include "Game.h"
 #include "GraphicsBuffer.h"
 
-GridPathfinder::GridPathfinder( GridGraph* pGraph )
-:Pathfinder(pGraph)
+GridPathfinder::GridPathfinder( GridGraph* pGraph, Color _pathColor )
+:Pathfinder(pGraph, _pathColor)
 ,mTimeElapsed(0.0)
 {
 #ifdef VISUALIZE_PATH
@@ -34,9 +34,9 @@ void GridPathfinder::drawVisualization( Grid* pGrid, GraphicsBuffer* pDest )
 		mpVisualizer->clear();
 	}
 
-	static ALLEGRO_COLOR pathColor = al_map_rgb( 255, 64, 64 );
-	static ALLEGRO_COLOR startColor = al_map_rgb(1, 255, 128);
-	static ALLEGRO_COLOR stopColor = al_map_rgb(1, 128, 255);
+	ALLEGRO_COLOR pathColor = mPathColor.color;
+	ALLEGRO_COLOR startColor = Color(WHITE).color;
+	ALLEGRO_COLOR stopColor = Color(GREEN).color;
 
 	unsigned int numNodes = mPath.getNumNodes();
 	ALLEGRO_COLOR currentPathColor = pathColor;

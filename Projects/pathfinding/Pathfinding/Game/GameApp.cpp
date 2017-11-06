@@ -20,13 +20,14 @@
 #include "DebugDisplay.h"
 #include "PathfindingDebugContent.h"
 #include "DijkstraPathfinder.h"
-
+#include "AStarPathfinder.h"
+#include "InputSystem.h"
 #include <fstream>
 #include <vector>
 
 const IDType BACKGROUND_ID = ENDING_SEQUENTIAL_ID + 1;
 const int GRID_SQUARE_SIZE = 32;
-const std::string gFileName = "pathgrid.txt";
+const std::string gFileName = "pathgrid2.txt";
 
 GameApp::GameApp()
 :mpMessageManager(NULL)
@@ -64,8 +65,12 @@ bool GameApp::init()
 	//init the nodes and connections
 	mpGridGraph->init();
 
+	mpInputSystem = new InputSystem();
 	//mpPathfinder = new DepthFirstPathfinder(mpGridGraph);
-	mpPathfinder = new DijkstraPathfinder(mpGridGraph);
+	//mpPathfinder = new DijkstraPathfinder(mpGridGraph);
+	//mpPathfinder = new AStarPathfinder(mpGridGraph);
+
+	setPathfinder(ASTAR);
 
 	//load buffers
 	mpGraphicsBufferManager->loadBuffer( BACKGROUND_ID, "wallpaper.bmp");
@@ -104,6 +109,9 @@ void GameApp::cleanup()
 
 	delete mpDebugDisplay;
 	mpDebugDisplay = NULL;
+
+	delete mpInputSystem;
+	mpInputSystem = NULL;
 }
 
 void GameApp::beginLoop()
@@ -127,20 +135,7 @@ void GameApp::processLoop()
 
 	mpMessageManager->processMessagesForThisframe();
 
-	ALLEGRO_MOUSE_STATE mouseState;
-	al_get_mouse_state( &mouseState );
-
-	if( al_mouse_button_down( &mouseState, 1 ) )//left mouse click
-	{
-		static Vector2D lastPos( 0.0f, 0.0f );
-		Vector2D pos( mouseState.x, mouseState.y );
-		if( lastPos.getX() != pos.getX() || lastPos.getY() != pos.getY() )
-		{
-			GameMessage* pMessage = new PathToMessage( lastPos, pos );
-			mpMessageManager->addMessage( pMessage, 0 );
-			lastPos = pos;
-		}
-	}
+	mpInputSystem->update();
 
 	//should be last thing in processLoop
 	Game::processLoop();
@@ -149,4 +144,40 @@ void GameApp::processLoop()
 bool GameApp::endLoop()
 {
 	return Game::endLoop();
+}
+
+void GameApp::setPathfinder(PathfinderType _type)
+{
+	if (mpPathfinder != NULL)
+	{
+		if (mpPathfinder->getType() == _type)
+			return;
+
+		delete mpPathfinder;
+	}
+
+	switch (_type)
+	{
+		case(DIJKSTRA):
+		{
+			mpPathfinder = new DijkstraPathfinder(mpGridGraph);
+
+			break;
+		}
+		case(ASTAR):
+		{
+			
+			mpPathfinder = new AStarPathfinder(mpGridGraph);
+
+			break;
+		}
+		default:
+			mpPathfinder = NULL;
+	}
+
+}
+
+void GameApp::quit()
+{
+	markForExit();
 }

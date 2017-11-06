@@ -2,8 +2,8 @@
 #include "Graph.h"
 #include "Path.h"
 
-Pathfinder::Pathfinder( Graph* pGraph )
-:mpGraph(pGraph)
+Pathfinder::Pathfinder( Graph* pGraph, Color _pathColor)
+:mpGraph(pGraph), mPathColor(_pathColor)
 {
 }
 
