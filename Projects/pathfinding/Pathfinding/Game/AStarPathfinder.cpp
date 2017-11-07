@@ -19,6 +19,8 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 	std::vector<AStarNode> closedList;
 	std::vector<AStarNode>::iterator closedListIter;
 
+	std::vector<AStarNode*> coverage;
+
 	AStarNode startNode = AStarNode(pFrom);
 	startNode.heuristicCostEstimate = getHeuristic(startNode, pTo);
 
@@ -51,12 +53,12 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 					continue;
 				}
 
-				//if (tempNode.connection != NULL)
-				//{
-				//	delete tempNode.connection;
+				if (tempNode.connection != NULL)
+				{
+//					delete tempNode.connection;
 
-				//	tempNode.connection = NULL;
-				//}
+					tempNode.connection = NULL;
+				}
 
 				newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
 
@@ -71,16 +73,15 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 					continue;
 				}
 
-				//if (tempNode.connection != NULL)
-				//{
-				//	delete tempNode.connection;
+				if (tempNode.connection != NULL)
+				{
+	//				delete tempNode.connection;
 
-				//	tempNode.connection = NULL;
-				//}
+					tempNode.connection = NULL;
+				}
 
 				newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
 
-				continue;
 			}
 			// if node is unvisited
 			else
@@ -93,6 +94,7 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 			tempNode.cost = newCost;
 			
 			tempNode.connection = new AStarNode(&currentNode);
+			coverage.push_back(tempNode.connection);
 
 			tempNode.heuristicCostEstimate = newCost + newHeuristic;
 
@@ -119,6 +121,7 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 	std::vector<Node*> tempPath;
 
 	AStarNode* toAdd = new AStarNode(&currentNode);
+	coverage.push_back(toAdd);
 	AStarNode* prevNode = NULL;
 
 	while (true)
@@ -148,6 +151,10 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 		mPath.addNode(tempPath[i]);
 
 		mVisitedNodes.push_back(tempPath[i]);
+	}
+
+	for (auto node : coverage) {
+		delete node;
 	}
 
 	return mPath;
@@ -183,10 +190,11 @@ float AStarPathfinder::getHeuristic(AStarNode _node, Node* _goal)
 
 	//distance from node to goal
 	//sqrt((x1 - x2)^2 + (y1 + y2)^2))
-	float vecDistance = sqrt( ( ( nodePos.getX() - goalPos.getX() ) * ( nodePos.getX() - goalPos.getX() ) + ( nodePos.getY() + goalPos.getY() ) * ( nodePos.getY() + goalPos.getY() ) ) );
+	float vecDistance = sqrt( ( ( nodePos.getX() - goalPos.getX() ) * ( nodePos.getX() - goalPos.getX() ) + ( nodePos.getY() - goalPos.getY() ) * ( nodePos.getY() - goalPos.getY() ) ) );
 
 	//only goes upwards??
 	toReturn = abs(vecDistance);
+
 
 	//only goes downwards????
 	//toReturn = _goal->getId() - _node.node->getId();
