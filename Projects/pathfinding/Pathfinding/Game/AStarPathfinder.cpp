@@ -6,6 +6,7 @@
 #include "Grid.h"
 #include "GameApp.h"
 #include "Vector2D.h"
+#include "PerformanceTracker.h"
 
 AStarPathfinder::AStarPathfinder(GridGraph* _graph):GridPathfinder(_graph, Color(BLUE))
 {}
@@ -15,135 +16,119 @@ AStarPathfinder::~AStarPathfinder()
 
 const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 {
-	std::priority_queue<AStarNode> openList;
-	std::vector<AStarNode> closedList;
-	std::vector<AStarNode>::iterator closedListIter;
+	gpPerformanceTracker->clearTracker("path");
+	gpPerformanceTracker->startTracking("path");
 
-	std::vector<AStarNode*> coverage;
+	AStarState currentState = AStarState(pTo);
 
 	AStarNode startNode = AStarNode(pFrom);
-	startNode.heuristicCostEstimate = getHeuristic(startNode, pTo);
+	startNode.heuristicCostEstimate = getHeuristic(startNode, currentState.goalNode);
 
-	openList.push(startNode);
+	currentState.openList.push(startNode);
 
-	AStarNode currentNode = openList.top();
-	bool here = false;
+	currentState.currentNode = currentState.openList.top();
 
-	while (currentNode.node != pTo && openList.size() > 0)
+	while (currentState.currentNode.node != currentState.goalNode && currentState.openList.size() > 0)
 	{
-		openList.pop();
+		currentState.openList.pop();
 
-		std::vector<Connection*> connections = mpGraph->getConnections(*currentNode.node);
+		evaluateConnections(currentState);
 
-		for (size_t i = 0; i < connections.size(); ++i)
-		{
-			AStarNode tempNode;
-			Node* connectionNode = connections[i]->getToNode();
-			AStarNode* newConnection = NULL;
-			float newCost = currentNode.cost + connections[i]->getCost();
-			float newHeuristic = 0;
+		currentState.closedList.push_back(currentState.currentNode);
 
-			// if node is in closed list
-			if ((closedListIter = std::find(closedList.begin(), closedList.end(), connectionNode)) != closedList.end())
-			{
-				tempNode = *closedListIter;
-
-				if (tempNode.cost <= newCost)
-				{
-					continue;
-				}
-
-				if (tempNode.connection != NULL)
-				{
-//					delete tempNode.connection;
-
-					tempNode.connection = NULL;
-				}
-
-				newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
-
-				closedList.erase(closedListIter);
-
-			}
-			// if node is in open list
-			else if ((tempNode = getNodeInOpenList(connectionNode, openList)).node != NULL)
-			{
-				if (tempNode.cost <= newCost)
-				{
-					continue;
-				}
-
-				if (tempNode.connection != NULL)
-				{
-	//				delete tempNode.connection;
-
-					tempNode.connection = NULL;
-				}
-
-				newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
-
-			}
-			// if node is unvisited
-			else
-			{
-				tempNode = AStarNode(connectionNode);
-
-				newHeuristic = getHeuristic(connectionNode, pTo);
-			}
-
-			tempNode.cost = newCost;
-			
-			tempNode.connection = new AStarNode(&currentNode);
-			coverage.push_back(tempNode.connection);
-
-			tempNode.heuristicCostEstimate = newCost + newHeuristic;
-
-			openList.push(tempNode);
-		}
-
-		closedList.push_back(currentNode);
-
-		currentNode = openList.top();
+		currentState.currentNode = currentState.openList.top();
 	}
 
 	//No result found
-	if (currentNode.node != pTo)
+	if (currentState.currentNode.node != currentState.goalNode)
 	{
 		std::cout << "No path was found.\n";
 		return mPath;
 	}
 
-	//clears current path
-	mPath.clear();
-	mVisitedNodes.clear();
+	gpPerformanceTracker->stopTracking("path");
+	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
 
+	return generatePath(currentState);
+}
+
+void AStarPathfinder::evaluateConnections(AStarState &_currentState)
+{
+	std::vector<Connection*> connections = mpGraph->getConnections(*_currentState.currentNode.node);
+	std::vector<AStarNode>::iterator closedListIter;
+
+	for (size_t i = 0; i < connections.size(); ++i)
+	{
+		AStarNode tempNode;
+		Node* connectionNode = connections[i]->getToNode();
+		AStarNode* newConnection = NULL;
+		float newCost = _currentState.currentNode.cost + connections[i]->getCost();
+		float newHeuristic = 0;
+
+		// if node is in closed list
+		if ((closedListIter = std::find(_currentState.closedList.begin(), _currentState.closedList.end(), connectionNode)) != _currentState.closedList.end())
+		{
+			tempNode = *closedListIter;
+
+			if (tempNode.cost <= newCost)
+			{
+				continue;
+			}
+
+			newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
+
+			_currentState.closedList.erase(closedListIter);
+
+		}
+		// if node is in open list
+		else if ((tempNode = getNodeInOpenList(connectionNode, _currentState.openList)).node != NULL)
+		{
+			if (tempNode.cost <= newCost)
+			{
+				continue;
+			}
+
+			newHeuristic = tempNode.heuristicCostEstimate - tempNode.cost;
+
+		}
+		// if node is unvisited
+		else
+		{
+			tempNode = AStarNode(connectionNode);
+
+			newHeuristic = getHeuristic(connectionNode, _currentState.goalNode);
+		}
+
+		tempNode.cost = newCost;
+
+		tempNode.connection = new AStarNode(&_currentState.currentNode);
+		_currentState.coverage.push_back(tempNode.connection);
+
+		tempNode.heuristicCostEstimate = newCost + newHeuristic;
+
+		_currentState.openList.push(tempNode);
+	}
+}
+
+Path& AStarPathfinder::generatePath(AStarState &_currentState)
+{ 
 	//generates a temporary path going from goal to start
 	std::vector<Node*> tempPath;
 
-	AStarNode* toAdd = new AStarNode(&currentNode);
-	coverage.push_back(toAdd);
-	AStarNode* prevNode = NULL;
+	AStarNode* toAdd = new AStarNode(&_currentState.currentNode);
+	_currentState.coverage.push_back(toAdd);
 
-	while (true)
+	//loops until it reaches start node
+	while (toAdd != NULL)
 	{
 		tempPath.push_back(toAdd->node);
 
-		//if this is start node
-		if (toAdd->connection == NULL)
-		{
-			//delete toAdd;
-
-			break;
-		}
-
-//		prevNode = toAdd;
-
 		toAdd = toAdd->connection;
-
-		//delete prevNode;
-
-		//prevNode = toAdd;
 	}
+
+	//clears current path
+	mPath.clear();
+	mVisitedNodes.clear();
 
 	//reverses path so the start is the first node
 	for (int i = tempPath.size() - 1; i >= 0; --i)
@@ -153,13 +138,9 @@ const Path& AStarPathfinder::findPath(Node* pFrom, Node* pTo)
 		mVisitedNodes.push_back(tempPath[i]);
 	}
 
-	for (auto node : coverage) {
-		delete node;
-	}
-
 	return mPath;
-	
 }
+
 
 AStarPathfinder::AStarNode AStarPathfinder::getNodeInOpenList(Node* _node, std::priority_queue<AStarNode> _openList)
 {
@@ -189,15 +170,11 @@ float AStarPathfinder::getHeuristic(AStarNode _node, Node* _goal)
 	Vector2D goalPos = game->getGrid()->getULCornerOfSquare(_goal->getId());
 
 	//distance from node to goal
-	//sqrt((x1 - x2)^2 + (y1 + y2)^2))
+	//sqrt((x1 - x2)^2 + (y1 - y2)^2))
 	float vecDistance = sqrt( ( ( nodePos.getX() - goalPos.getX() ) * ( nodePos.getX() - goalPos.getX() ) + ( nodePos.getY() - goalPos.getY() ) * ( nodePos.getY() - goalPos.getY() ) ) );
 
-	//only goes upwards??
 	toReturn = abs(vecDistance);
 
-
-	//only goes downwards????
-	//toReturn = _goal->getId() - _node.node->getId();
 	
 	return toReturn;
 }

@@ -15,7 +15,7 @@ public:
 	~DebugDisplay();
 
 	void draw( GraphicsBuffer* pBuffer );
-
+	DebugContent* getContent() { return mpContent; };
 private:
 	ALLEGRO_FONT* mpFont;
 	DebugContent* mpContent;

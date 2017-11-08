@@ -175,6 +175,8 @@ void GameApp::setPathfinder(PathfinderType _type)
 			mpPathfinder = NULL;
 	}
 
+	if(mpDebugDisplay != NULL)
+		static_cast<PathfindingDebugContent*>( mpDebugDisplay->getContent() )->setPathfinder(mpPathfinder);
 }
 
 void GameApp::quit()

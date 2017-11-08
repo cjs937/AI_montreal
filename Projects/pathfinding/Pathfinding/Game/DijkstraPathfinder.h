@@ -26,6 +26,27 @@ class DijkstraPathfinder : public GridPathfinder
 			float cost;
 	};
 
+	struct DijkstraState
+	{
+		public:
+			DijkstraState(){};
+
+			~DijkstraState()
+			{
+				for (int i = 0; i < coverage.size(); ++i)
+				{
+					delete coverage[i];
+					coverage[i] = NULL;
+				}
+			};
+
+			DijkstraNode currentNode;
+			std::priority_queue<DijkstraNode> openList;
+			std::vector<Node*> closedList;
+			std::vector<DijkstraNode*> coverage;
+			//Node* goalNode;
+	};
+
 public:
 	DijkstraPathfinder(GridGraph* pGraph);
 	~DijkstraPathfinder();
@@ -37,4 +58,6 @@ public:
 private:
 
 	DijkstraNode getNodeInOpenList(Node* node, std::priority_queue<DijkstraNode> openList);
+	void evaluateConnections(DijkstraState &_currentState);
+	Path& generatePath(DijkstraState &_currentState);
 };

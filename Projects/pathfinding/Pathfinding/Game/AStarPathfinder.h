@@ -29,6 +29,27 @@ public:
 		float heuristicCostEstimate;
 	};
 
+	struct AStarState
+	{
+	public:
+		AStarState(Node* _goal):goalNode(_goal) {};
+
+		~AStarState() 
+		{
+			for (int i = 0; i < coverage.size(); ++i)
+			{
+				delete coverage[i];
+				coverage[i] = NULL;
+			}
+		};
+
+		AStarNode currentNode;
+		std::priority_queue<AStarNode> openList;
+		std::vector<AStarNode> closedList;
+		std::vector<AStarNode*> coverage;
+		Node* goalNode;
+	};
+
 	AStarPathfinder(GridGraph* _graph);
 	~AStarPathfinder();
 
@@ -38,5 +59,7 @@ public:
 
 private:
 	AStarNode getNodeInOpenList(Node* node, std::priority_queue<AStarNode> openList);
+	void evaluateConnections(AStarState &_currentState);
+	Path& generatePath(AStarState &_currentState);
 	float getHeuristic(AStarNode _node, Node* _goal);
 };
